@@ -1,0 +1,1 @@
+java $JAVA_OPTIONS -jar ./*.*ar --server.port=7003 --spring.profiles.active=k8s

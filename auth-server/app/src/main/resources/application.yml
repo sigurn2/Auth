@@ -1,0 +1,93 @@
+server:
+  context-path: /uaa
+  use-forward-headers: true
+
+saber: 
+  auth:
+    cors:
+      allowed:
+        uris: ^/uaa/logout
+        origins: http://localhost:8080$,http://authserver:8080$
+    password: 
+      company: 
+        default: nnggfw123
+      encoder: MD5PasswordEncoder
+    zwfw:
+      app:
+        url: http://10.58.34.65:8088/zwfw/app/c/
+  si:
+    enterprise:
+      orgCode: xinyongdaima200425,91210102240553755U,912104002423012365,91211223122970697G,91210000117562306B,91211103MA0QD7M51R,91211200MA0QEN819J,12345678,912100007196442106,928374837283748392,91210603001141235C,912104006612046849,91210100604722004K,9121010081766862X8,912102009436261643,912102026048522478,912102007824511639,91210900121562106B
+    flag: false
+  la:
+    flag: true
+
+security:
+  basic:
+    enabled: false
+    des: false
+    keys: blank
+
+filtered: 
+  captcha: 
+    img: 
+      valid: true
+        
+cors:
+  xhr:
+    allowed: 
+      uris: ^/uaa/logout,^/uaa/swagger-resources
+      origins: http://localhost:8080$,http://authserver:8080$
+      x-requested-with: com.neusoft.gopaynn,net.hyy.fun.thirdenv,com.cloudbae.loveliaoning,com.tencent.mm,com.neusoft.mi.liaoning
+#image captcha config 
+captcha: 
+  rendomBackground: false
+  maxFontSize: 30
+  minFontSize: 28
+  maxLength: 4
+  minLength: 4
+  imageWidth: 90
+  imageHeight: 40
+
+#server:
+#  port: 8080
+spring:
+  profiles: 
+   active: dev
+#    active: dev,uaa-api-doc
+#    active: product
+ #cd    active: dev_cloud
+  datasource: 
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    tomcat:
+      test-while-idle: true
+      time-between-eviction-runs-millis: 15000
+      validation-query: select 1 from dual
+  jpa:
+    hibernate:
+      naming: 
+        strategy: org.hibernate.cfg.DefaultNamingStrategy
+    database: oracle
+
+    
+yardman:
+  flagWsTure: false
+  ticket: "001"
+  serverNode: "001"
+  client:
+    user: aLHN06WVDObCifUlin1Prkfsq9iYZH+6
+    encryptionUser: 0t95LeUJ43flZD4wHWZs/E5rlqg6UoMn
+    key:
+      password: jUpiiZtCzw8=
+
+  ENTERPRISE_ADDRESS:
+    url: http://10.56.18.10:7775/api/public/webservice/NeuWebService?wsdl
+    flagWsTure: true
+    isDataSyn: false
+    ticket: "NEUSOFT_GGFW_WEB"
+    serverNode: "002"
+    client:
+      user: aLHN06WVDObCifUlin1Prkfsq9iYZH+6
+      encryptionUser: 0t95LeUJ43flZD4wHWZs/E5rlqg6UoMn
+      key:
+        password: jUpiiZtCzw8=

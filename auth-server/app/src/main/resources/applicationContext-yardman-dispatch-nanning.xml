@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+
+    <!-- WebService服务分发对象 _bo是为了加入事务 -->
+    <bean id="businessDispatchBPO_bo" class="com.neusoft.sl.si.yardman.server.dispatch.BusinessDispatchBPOImpl">
+        <property name="ticketRouterConfig" ref="ticketRouterConfig" />
+    </bean>
+
+    <!-- 系统访问权限路由 -->
+    <bean id="ticketRouterConfig" class="com.neusoft.sl.si.yardman.server.dispatch.TicketRouterConfig">
+        <!-- 交易处理实现对象 -->
+        <property name="ticketRouter">
+            <map>
+                <!-- 社保系统 ticket=001 -->
+                <!-- CA系统 ticket=002 -->
+                <!-- 人力资源系统 ticket=003 -->
+                <!-- <entry key="001" value-ref="forSimisRouterConfig" /> -->
+                <entry key="003" value-ref="forThirdRouterConfig" />
+            </map>
+        </property>
+    </bean>
+
+    <!-- 为第三方系统提供的接口配置 建议按每个外部接口系统一个配置文件进行配置 -->
+    <bean id="forThirdRouterConfig" class="com.neusoft.sl.si.yardman.server.dispatch.ProcessorConfigMap">
+        <!-- 交易处理实现对象 -->
+        <property name="configMap">
+            <map>
+                <!-- 1.0版本 -->
+                <entry key="1.0">
+                    <map>
+                        <!-- 注册个人用户 -->
+                        <entry key="NB_TPXT_QYWB_001" value-ref="tppersonRegisterProcess" />                        
+                        <!-- 注册企业用户 -->
+                        <entry key="NB_TPXT_QYWB_002" value-ref="tpcompanyRegisterProcess" />
+                        <!-- 修改用户密码 -->
+                        <entry key="NB_TPXT_QYWB_003" value-ref="tpchangePasswordProcess" />
+                        <!-- 重置用户密码或手机号 -->
+                        <entry key="NB_TPXT_QYWB_004" value-ref="tpresetSensitiveInfoProcess" />
+                        <!-- 查询个人用户信息 -->
+                        <!-- <entry key="NB_TPXT_QYWB_005" value-ref="tpqueryPersonProcess" /> -->
+                        <!-- 查询个人用户社保信息 -->
+                        <!-- <entry key="NB_TPXT_QYWB_006" value-ref="tpqueryPersonSiInfoProcess" /> -->
+                    </map>
+                </entry>
+                <!-- 1.1版本 <entry key="1.1" /> -->
+            </map>
+        </property>
+    </bean>
+
+</beans>
+

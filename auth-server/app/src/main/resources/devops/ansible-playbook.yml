@@ -1,0 +1,35 @@
+- hosts: jenkins
+  remote_user: jenkins
+  vars:
+    workdir: /home/jenkins/.jenkins/workspace/nnrs-auth
+    jarfile: si-liaoning-authserver-1.0.0-SNAPSHOT.jar
+    image: 192.168.174.60:8899/nnrs/auth
+  tasks:
+  - name: mvn install app
+    shell: "cd {{ workdir }}/auth-server/app && /usr/local/apache-maven-3.1.1/bin/mvn clean install -Dmaven.test.skip=true"
+    async: 300
+    poll: 5
+  - name: del jar or war
+    shell: "rm -f {{ workdir }}/auth-server/app/src/main/resources/devops/src/*.*ar"
+    ignore_errors: yes
+  - name: del lib
+    shell: "rm -rf {{ workdir }}/auth-server/app/src/main/resources/devops/src/lib"
+    ignore_errors: yes
+  - name: move app
+    shell: "mv {{ workdir }}/auth-server/app/target/{{ jarfile }} {{ workdir }}/auth-server/app/src/main/resources/devops/src/"
+  - name: move lib
+    shell: "mv {{ workdir }}/auth-server/app/target/lib {{ workdir }}/auth-server/app/src/main/resources/devops/src/"
+  - name: docker rmi app-image
+    shell: "docker rmi {{ image }}"
+    ignore_errors: yes
+  - name: docker build app-image
+    shell: "docker build -t {{ image }} {{ workdir }}/auth-server/app/src/main/resources/devops"
+  - name: docker push app-image
+    shell: "docker push {{ image }}"
+- hosts: k8s
+  remote_user: root
+  vars:
+    k8sdir: /work/liaoning/auth
+  tasks:
+  - name: update app
+    shell: "cd {{ k8sdir }} && sh update.sh"
