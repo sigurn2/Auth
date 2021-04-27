@@ -1,0 +1,637 @@
+@charset "utf-8";
+/* CSS Document */
+body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: "微软雅黑";
+    font-size: 14px;
+    color: #666666;
+
+}
+
+.abc {
+    height: 620px;
+    margin: 10px auto;
+}
+
+@media screen and (min-width: 1280px) {
+    .abc {
+        width: 96%;
+    }
+}
+
+/* css 注释说明：设置了浏览器宽度不小于1280px时 abc 显示1400px宽度 */
+
+@media screen and (max-width: 1004px) {
+    .abc {
+        width: 1000px;
+    }
+}
+
+input::-ms-clear {
+    display: none;
+}
+
+input, button, select, textarea {
+    outline: none
+}
+
+textarea {
+    resize: none
+}
+
+a {
+    color: #555555;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+    color: #ff9300;
+}
+
+/* 设置了浏览器宽度不大于1004px时 abc 显示1000px宽度 */
+/*----------------------------------------------------------------------------------------------------------------------*/
+.L_top {
+    width: 100%;
+    height: 80px;
+    background: #ffffff;
+}
+
+.L_center {
+    width: 1000px;
+    height: 80px;
+    margin: 0 auto;
+}
+
+.L_cen_left {
+    width: 394px;
+    height: 40px;
+    margin-top: 25px;
+    background: url(../images/Logo.png) no-repeat;
+    float: left;
+}
+
+.L_cen_left_school {
+    width: 394px;
+    height: 40px;
+    margin-top: 25px;
+    background: url(../images/Logo_Siagent.png) no-repeat;
+    float: left;
+}
+
+.L_cen_left_expert {
+    width: 394px;
+    height: 40px;
+    margin-top: 25px;
+    background: url(../images/Logo_expert.png) no-repeat;
+    float: left;
+}
+
+.L_cen_right {
+    width: 180px;
+    height: 30px;
+    margin-top: 50px;
+    float: right;
+}
+
+.L_ceb_R01 {
+    width: 80px;
+    height: 26px;
+    line-height: 24px;
+    background: #ee6343;
+    text-align: center;
+    font-size: 14px;
+    color: #FFF;
+    float: left;
+    margin-right: 10px;
+}
+
+.L_ceb_R01:hover {
+    width: 80px;
+    height: 26px;
+    line-height: 24px;
+    background: #e94823;
+    font-size: 14px;
+    color: #FFF;
+}
+
+.L_ceb_R02 {
+    width: 80px;
+    height: 26px;
+    line-height: 24px;
+    background: #38ae72;
+    text-align: center;
+    font-size: 14px;
+    color: #FFF;
+    float: left;
+}
+
+.L_ceb_R02:hover {
+    width: 80px;
+    height: 26px;
+    line-height: 24px;
+    background: #20a461;
+    font-size: 14px;
+    color: #FFF;
+}
+
+.L_bag {
+    width: 100%;
+    background: linear-gradient(to right, #3467ce, #5389f4);
+    height: 470px;
+}
+
+.L_two {
+    width: 950px;
+    height: 78px;
+    line-height: 78px;
+    margin: 0 auto;
+    border-bottom: #efefef 1px solid;
+    background: url(../images/L_01.png) no-repeat;
+}
+
+.L_two span {
+    color: #ee6343;
+}
+
+.L_twobg {
+    width: 990px;
+    height: 490px;
+    background: #ffffff;
+    border: 1px solid #dddddd;
+    background-repeat: no-repeat;
+    margin: 30px auto;
+}
+
+.L_twofg {
+    width: 990px;
+    height: 40px;
+    margin: 0 auto;
+}
+
+.L_three {
+    width: 1200px;
+    height: 470px;
+    margin: 0 auto;
+    background: url(../images/L_02.jpg) no-repeat left center;
+    background-size: contain;
+}
+
+.L_three_enterprise {
+    width: 1004px;
+    height: 470px;
+    margin: 0 auto;
+    background: url(../images/L_02_enterprise.jpg) no-repeat;
+    overflow: hidden;
+}
+
+.L_three_expert {
+    width: 1004px;
+    height: 470px;
+    margin: 0 auto;
+    background: url(../images/L_02_expert.jpg) no-repeat;
+    overflow: hidden;
+}
+
+.L_three_siagent {
+    width: 1004px;
+    height: 470px;
+    margin: 0 auto;
+    background: url(../images/L_02_siagent.jpg) no-repeat;
+    overflow: hidden;
+}
+
+.L_t_left {
+    width: 690px;
+    height: 310px;
+    margin-top: 50px;
+    overflow: hidden;
+    float: left;
+}
+
+.L_t_right {
+    width: 340px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    margin: 30px 40px 0 0;
+    float: right;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+.L_o_text {
+    width: 100%;
+    height: 36px;
+    font-size: 16px;
+    color: #333;
+    line-height: 36px;
+    font-weight: 700;
+    text-align: left;
+    border-bottom: 1px solid #d9d9d9;
+}
+
+.L_t_text {
+    width:100%;
+    height: 40px;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.L_T_admin {
+    width: 27%;
+    height: 36px;
+    float: left;
+    text-align: right;
+    font-size: 13px;
+    color: #3c3c3c;
+}
+
+.L_T_adright {
+    width: 100%;
+    height:40px;
+    border: 1px solid #ababab;
+    float: left;
+    border-radius: 4px;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.L_t_Code {
+    width: 80px;
+    height: 30px;
+    float: left;
+}
+
+.L_t_text a {
+    color: #3c3c3c;
+}
+
+.L_t_text a:hover {
+    color: #29a4e4;
+}
+
+.L_t_text_color2 {
+    clear: both;
+    margin: 0 auto;
+    width: 250px;
+    height: 34px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+    text-align: center;
+    line-height: 30px;
+    background: #e64145;
+}
+
+.L_t_text_color2:hover {
+    width: 250px;
+    height: 34px;
+    background: #df3133;
+}
+
+.L_t_text_color {
+    width: 100%;
+    height: 40px;
+    background: #598bf1;
+    font-size: 14px;
+    color: #ffffff;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 4px;
+    margin-top: 30px;
+}
+
+.L_t_text_color:hover {
+    background: #4c7ee4;
+}
+.other_login{
+    float: left;
+    width: 100%;
+}
+.other_login_title {
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+}
+.other_login_title .line {
+    display: inline-block;
+    width:74px;
+    border-top: 1px solid #ccc ;
+}
+.other_login_title .txt {
+    color: #686868;
+    vertical-align: -8%;
+    padding: 0 5px;
+}
+.other_login>a{
+    float: left;
+    width: 50%;
+    height: 30px;
+}
+.link_btn1{
+    background: url(../images/link_btn1.png) no-repeat center center;
+}
+.link_btn2{
+    background: url(../images/link_btn2.png) no-repeat center center;
+}
+.L_twoleft {
+    width: 300px;
+    float: left;
+    line-height: 20px;
+}
+
+.L_tworight {
+    width: 200px;
+    float: right;
+    line-height: 20px;
+    text-align: right;
+}
+
+.L_t_b {
+    font-size: 14px;
+}
+
+/*----------------------------------------------register-----------------------------------------------------*/
+.L_register {
+    width: 680px;
+    height: 370px;
+    margin: 10px auto;
+    clear: both;
+}
+
+.L_Top {
+    width: 70%;
+    height: 40px;
+    margin: 20px auto;
+    clear: both;
+}
+
+.R_left {
+    width: 50%;
+    height: 40px;
+    background: url(../images/L_03.jpg) repeat-x;
+    float: left;
+}
+
+.R_left2 {
+    width: 50%;
+    height: 40px;
+    background: url(../images/L_09.jpg) repeat-x;
+    float: left;
+}
+
+.R_right {
+    width: 50%;
+    height: 40px;
+    line-height: 40px;
+    background: url(../images/L_06.jpg) repeat-x;
+    float: left;
+    text-align: center;
+    color: #FFF;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.R_right2 {
+    width: 50%;
+    height: 40px;
+    line-height: 40px;
+    background: url(../images/L_09.jpg) repeat-x;
+    float: left;
+    text-align: center;
+    color: #FFF;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.R_L_text {
+    width: 300px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    color: #FFF;
+    font-size: 16px;
+    font-weight: bold;
+    float: left;
+}
+
+.R_L_pic {
+    width: 25px;
+    height: 40px;
+    background: url(../images/L_04.jpg) no-repeat;
+    float: right;
+}
+
+.R_L_pic2 {
+    width: 25px;
+    height: 40px;
+    background: url(../images/L_08.jpg) no-repeat;
+    float: right;
+}
+
+.L_T_input {
+    width: 680px;
+    height: 38px;
+    margin: 15px 0;
+}
+
+.L_I_left {
+    width: 20%;
+    height: 36px;
+    line-height: 32px;
+    text-align: right;
+    float: left;
+}
+
+.L_I_left span {
+    margin: 0 5px;
+    color: #F00;
+    font-size: 16px;
+}
+
+.L_I_Cen01 {
+    width: 38%;
+    height: 36px;
+    float: left;
+    background: url(../images/L_zc01.jpg) center right no-repeat;
+    border: #cbcbcb 1px solid;
+}
+
+.L_I_Cen02 {
+    width: 38%;
+    height: 36px;
+    float: left;
+    background: url(../images/L_zc02.jpg) center right no-repeat;
+    border: #cbcbcb 1px solid;
+}
+
+.L_I_Cen03 {
+    width: 38%;
+    height: 36px;
+    float: left;
+    background: url(../images/L_zc03.jpg) center right no-repeat;
+    border: #cbcbcb 1px solid;
+}
+
+.L_I_Cen04 {
+    width: 38%;
+    height: 36px;
+    float: left;
+    background: url(../images/L_zc04.jpg) center right no-repeat;
+    border: #cbcbcb 1px solid;
+}
+
+.L_I_Cen {
+    width: 38%;
+    height: 36px;
+    float: left;
+    border: #cbcbcb 0px solid;
+}
+
+.L_I_Right {
+    width: 40%;
+    height: 36px;
+    float: left;
+}
+
+.L_I_input {
+    width: 85%;
+    height: 30px;
+    background: none;
+    border: 0px solid #acacac;
+    padding: 0 5px;
+}
+
+.L_I_input:hover {
+    width: 80%;
+    height: 30px;
+    background: none;
+    border: 0px solid #49a6f4;
+    padding: 0 5px;
+}
+
+.L_I_input2 {
+    width: 50%;
+    height: 30px;
+    background: none;
+    border: 1px solid #cbcbcb;
+    padding: 0 5px;
+    float: left;
+    margin-right: 6px;
+}
+
+.L_I_input2:hover {
+    width: 50%;
+    height: 30px;
+    background: none;
+    border: 1px solid #cbcbcb;
+    padding: 0 5px;
+    float: left;
+}
+
+.L_I_buttom {
+    width: 40%;
+    height: 30px;
+    float: left;
+}
+
+.L_I_Green {
+    width: 100px;
+    height: 26px;
+    line-height: 24px;
+    margin: 3px auto;
+    background: #8bd371;
+    text-align: center;
+    color: #FFF;
+}
+
+.L_I_Green:hover {
+    width: 100px;
+    height: 26px;
+    line-height: 24px;
+    margin: 3px auto;
+    background: #72c057;
+    text-align: center;
+    color: #FFF;
+}
+
+.L_Next {
+    width: 200px;
+    height: 28px;
+    margin: 0 auto;
+}
+
+.R_pic {
+    width: 240px;
+    height: 124px;
+    line-height: 124px;
+    padding-left: 130px;
+    margin: 0 auto;
+    background: url(../images/L_07.png) left no-repeat;
+    clear: both;
+    color: #6ac147;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 50px;
+}
+
+.L_zc_ts {
+    width: 94%;
+    padding: 0 5px;
+    height: 36px;
+    line-height: 18px;
+    font-size: 12px;
+    margin: 0 auto;
+    background: #f7f7f7;
+    border: #dddddd 1px solid;
+}
+
+.L_zc_tr {
+    width: 94%;
+    padding: 0 5px;
+    height: 36px;
+    line-height: 18px;
+    font-size: 12px;
+    margin: 0 auto;
+    background: #ffebec;
+    border: #f7adb0 1px solid;
+    color: #fe0002;
+}
+
+/*----- 各系统icon -----*/
+.L_cen_left_person {
+    width: 372px;
+    height: 78px;
+    background: url(../images/Logo_Person.png) no-repeat;
+    float: left;
+}
+
+.L_cen_left_enterprise {
+    width: 572px;
+    height: 78px;
+    background: url(../images/Logo.png) no-repeat;
+    float: left;
+}
+.L_cen_left_bxenterprise {
+    width: 572px;
+    height: 78px;
+    background: url(../images/bxLogo.png) no-repeat;
+    float: left;
+}
+.L_cen_left_ca {
+    width: 520px;
+    height: 42px;
+    margin-top: 25px;
+    background: url(../images/Logo.png) no-repeat;
+    float: left;
+}
+
+.L_cen_left_siagent {
+    width: 520px;
+    height: 42px;
+    margin-top: 25px;
+    background: url(../images/Logo_school.png) no-repeat;
+    float: left;
+}

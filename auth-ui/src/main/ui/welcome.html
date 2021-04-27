@@ -1,0 +1,313 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>本溪市社会保险公共服务平台</title>
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style type="text/css">
+        <!--
+        .titleTop {
+            font-size: 50px;
+            font-family: "微软雅黑";
+            line-height: 18px;
+        }
+
+        .titleTr {
+            color: #FFFFFF;
+            background-color: #0B6CD5;
+        }
+
+        .titleSmall {
+            font-size: 12px;
+            font-family: "微软雅黑";
+            line-height: 10px;
+        }
+
+        .titleMid {
+            font-size: 24px;
+            font-family: Arial;
+            line-height: 18px;
+        }
+
+        .canUse {
+            font-size: 12px;
+            font-family: Arial, "微软雅黑";
+            color: #999999;
+            line-height: 20px;
+            margin-left: 10px;
+        }
+
+        .canVerFF {
+            height: 30px;
+            line-height: 30px;
+            width: 95%;
+            background-color: #B0B9C0;
+            color: #FFFFFF;
+            margin: 10px 0 10px 10px;
+            font-family: Arial, "微软雅黑";
+            text-align: center;
+        }
+
+        .canVerIE {
+            height: 30px;
+            line-height: 30px;
+            width: 95%;
+            background-color: #B0B9C0;
+            color: #FFFFFF;
+            margin: 30px 0 10px 10px;
+            font-family: Arial, "微软雅黑";
+            text-align: center;
+        }
+
+        .canOther {
+            margin: 0 0 10px 30px;
+            font-family: "微软雅黑";
+            color: #525252;
+        }
+
+        .forXP {
+            height: 30px;
+            line-height: 30px;
+            width: 100%;
+            background-color: #F9E266;
+            margin: 10px 0 10px 0px;
+            font-family: "微软雅黑";
+            color: #BD5F0C;
+            text-align: center;
+        }
+
+        .lineCent {
+            width: 20px;
+            height: 300px;
+            border-right: 1px solid #b3b3b3;
+            display: block;
+        }
+
+        .fontTuijian {
+            font-family: "微软雅黑";
+            font-size: 42px;
+            color: #525252;
+            width: 330px;
+            text-align: left;
+        }
+
+        .smallFontBar {
+            width: 330px;
+            text-align: left;
+            font-family: Arial, "微软雅黑";
+            font-size: 20px;
+            color: #525252;
+            margin-bottom: 10px;
+        }
+
+        .linkButton {
+            width: 330px;
+            height: auto;
+            font-family: Arial, "微软雅黑";
+            font-size: 20px;
+            color: #ffffff;
+            text-align: center;
+            line-height: 60px;
+            background-color: #3D8CE3;
+            cursor: pointer;
+        }
+
+        .linkButton:hover {
+            background-color: #1A82F4;
+        }
+
+        .smallFontBar2 {
+            width: 330px;
+            text-align: left;
+            font-family: "微软雅黑";
+            font-size: 12px;
+            color: #525252;
+            margin-top: 5px;
+        }
+
+        .topbuttonThree {
+            cursor: pointer;
+            width: 149px;
+            height: 35px;
+            display: block;
+            display: inline-block;
+            *display: inline;
+
+        }
+
+        -->
+    </style>
+</head>
+<script language="JavaScript">
+    //IE浏览器版本检测
+    function compIE() {
+        var ua = window.navigator.userAgent;
+        console.log(ua);
+        var versionSplit = /[\/\.]/i;
+        var versionRe = /(Version)\/([\w.\/]+)/i; // match for browser version
+        var ieRe = /(?:(MSIE) |(Trident)\/.+rv:)([\w.]+)/i; // must not contain 'Opera'
+        var match = ua.match(ieRe);
+        if (!match) {
+            return false;
+        }
+        if (Array.prototype.filter) {
+            match = match.filter(function (item) {
+                return (item != null);
+            });
+        } else {
+            // Hello, IE8!
+            for (var j = 0; j < match.length; j++) {
+                var matchGroup = match[j];
+                if (matchGroup == null || matchGroup == '') {
+                    match.splice(j, 1);
+                    j--;
+                }
+            }
+        }
+        var name = match[1].replace('Trident', 'MSIE');
+        var versionMatch = ua.match(versionRe) || match;
+        var version = versionMatch[2].split(versionSplit)[0] * 1;
+        console.log("IE:" + version);
+        if (version >= 10) {
+            return true;
+        }
+    }
+    //浏览器版本检测，如果符合就跳转到login
+    function isCompatibled() {
+        if (compIE()) {
+            location.href = "index.html";
+            return;
+        }
+        var Browser = {};
+        var ua = navigator.userAgent.toLowerCase();
+        console.log(ua);
+        var s;
+        (s = ua.match(/msie ([\d.]+)/)) ? Browser.ie = s[1] :
+                (s = ua.match(/firefox\/([\d.]+)/)) ? Browser.firefox = s[1] :
+                        (s = ua.match(/chrome\/([\d.]+)/)) ? Browser.chrome = s[1] :
+                                Browser.other = s[1];
+        var browserVersion = 0;
+        if (Browser.firefox) {
+            browserVersion = Browser.firefox.split('.')[0] * 1;
+            console.log('浏览器版本' + browserVersion);
+            if (browserVersion >= 31) {//Firefox 31
+                location.href = "index.html";
+                return;
+            }
+        } else if (Browser.chrome) {
+            browserVersion = Browser.chrome.split('.')[0] * 1;
+            console.log('浏览器版本' + browserVersion);
+            if (browserVersion >= 35) {//Chrome 35
+                location.href = "index.html";
+                return;
+            }
+        }
+    }
+    isCompatibled();
+    function downChrome() {
+        location.href = "download/Chrome.zip";
+    }
+</script>
+<body style="margin:0 ">
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr class="titleTr">
+        <td colspan="10">
+            <div align="center" class="titleTr">
+                <p>&nbsp;</p>
+
+                <p class="titleTop">请使用更安全的浏览器</p>
+
+                <p class="titleMid">Explorer Update Notice</p>
+
+                <p class="titleSmall">您可以选择更新您的浏览器版本，或选择其它浏览器访问系统</p>
+
+                <p class="titleSmall">我们为您提供下列浏览器使用建议 </p>
+
+                <p>&nbsp;</p>
+            </div>
+        </td>
+    </tr>
+    <tr style="background-color:#C2DFFF;height:15px">
+        <td colspan="10">&nbsp;
+
+        </td>
+    </tr>
+    <tr style="height:15px">
+        <td colspan="10">&nbsp;
+
+        </td>
+    </tr>
+</table>
+
+
+<div>
+    <table width="100%" height="auto" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td>&nbsp;</td>
+            <td width="253px">
+                <div><img src="images/chromeLogo.png" width="253" height="253"/></div>
+            </td>
+            <td width="350px">
+                <div class="fontTuijian">推荐使用</div>
+                <div class="smallFontBar">Google Chrome 浏览器访问系统</div>
+                <div class="linkButton" onClick="downChrome()">Chrome 35.0及以上版本 点击下载</div>
+                <div class="smallFontBar2">系统为您提供的是官方版本下载</div>
+                <div class="topbuttonThree" style="margin-top:30px">
+                    <img src="/images/installChrome.png" onclick='window.open("download/installChrome.swf")'/>
+                </div>
+            </td>
+            <td width="2px">
+                <div class="lineCent"></div>
+            </td>
+            <td width="450px">
+                <table>
+                    <tr>
+                        <td width="100%" colspan="4">
+                            <div class="canOther">其他推荐浏览器</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="8%">&nbsp;</td>
+                        <td width="16%"><img src="images/fireFoxLogo.png" width="93" height="93"/></td>
+                        <td width="68%">
+                            <div class="canVerFF">Firefox 31.0及以上版本</div>
+                            <div class="canUse">
+                                <div>您可以使用Mozilla Firefox 浏览器访问系统</div>
+                                <div>您可以在<a href="download/Firefox.zip">这里</a>下载到此浏览器</div>
+                            </div>
+                        </td>
+                        <td width="8%">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td height="10px"></td>
+                    </tr>
+                    <tr>
+                        <td width="8%">&nbsp;</td>
+                        <td width="16%"><img src="images/ieLogo.png" width="93" height="93"/></td>
+                        <td width="68%">
+                            <div class="canVerIE">IE 10.0及以上版本</div>
+                            <div class="canUse">
+                                <div>您可以使用Internet Explorer 浏览器访问系统</div>
+                                <div>您可以在<a
+                                        href="http://windows.microsoft.com/zh-CN/internet-explorer/download-ie">这里</a>下载到此浏览器
+                                </div>
+                                <div class="forXP">WindowsXP的用户，请先升级您的操作系统</div>
+                            </div>
+                        </td>
+                        <td width="8%">&nbsp;</td>
+                    </tr>
+
+                </table>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+
+</div>
+
+
+</body>
+</html>

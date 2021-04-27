@@ -1,0 +1,147 @@
+<!doctype html>
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+<!--    <title>辽宁省人社网上经办大厅</title>-->
+    <title ng-bind="title"></title>
+    <meta name="description" content="">
+    <meta name="renderer" content="webkit">
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+    <!-- build:css({src/main}) styles/vendor.css -->
+    <!-- package:css -->
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css"/>
+    <!-- endpackage -->
+    <!-- endbuild -->
+
+    <!-- build:css(.tmp) styles/common.css -->
+    <link rel="stylesheet" href="styles/css.css" type="text/css"/>
+    <link rel="stylesheet" href="styles/login.css" type="text/css"/>
+    <link rel="stylesheet" href="styles/personlogin.css" type="text/css"/>
+    <!-- endbuild -->
+</head>
+<body data-ng-app="AuthUI" ng-controller="ApplicationController"
+      ng-init="loadApp()" ng-class="{'frontPage':!isAuthenticated()}">
+<!--[if lt IE 7]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+    your browser</a> to improve your experience.</p>
+<![endif]-->
+
+
+<!-- Add your application content here-->
+<!--loading   style="display: none;"-->
+<!--载入等待组件-->
+<div id="spinner" class="loader_container">
+    <div class="loader_img"></div>
+</div>
+<div>
+
+    <div class="P_L_top">
+        <div class="P_L_center" >
+<!--            <div ng-class="getSystemIconClass()"></div>-->
+            本溪市人力资源和社会保障公共服务平台（{{areaName}}）
+        </div>
+    </div>
+    <!--ng-view-->
+    <div class="slide-animation-container">
+        <div data-ng-view="" id="ng-view" class="slide-animation"></div>
+    </div>
+
+
+</div>
+<!--弹出消息框-->
+<div id="dialog-message"></div>
+<!-- build:js({src/main}) scripts/vendor.js -->
+<!-- package:js -->
+<script src="../../node_modules/jquery/dist/jquery.js"></script>
+<script src="../../node_modules/angular/angular.js"></script>
+<script src="../../node_modules/bootstrap/dist/js/bootstrap.js"></script>
+<script src="../../node_modules/angular-animate/angular-animate.js"></script>
+<script src="../../node_modules/angular-cookies/angular-cookies.js"></script>
+<script src="../../node_modules/angular-resource/angular-resource.js"></script>
+<script src="../../node_modules/angular-route/angular-route.js"></script>
+<script src="../../node_modules/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="../../node_modules/crypto-js/crypto-js.js"></script>
+<!-- endpackage -->
+<!-- endbuild -->
+
+<!-- build:js({.tmp,src/main/ui}) scripts/scripts.js -->
+
+<!--应用层配置-->
+<script src="scripts/app.js"></script>
+<script src="scripts/routes.js"></script>
+<script src="scripts/config.js"></script>
+<script src="scripts/app-controller.js"></script>
+<script src="scripts/des.js"></script>
+
+<!--登录-->
+<script src="modules/login/loginController.js"></script>
+
+<!------------------------------------公用组件------------------------------------>
+<script src="modules/support/service/xsrfToken.js"></script>
+<script src="modules/support/service/capcha.js"></script>
+<script src="modules/support/directive/directive.js"></script>
+<script src="modules/support/service/IDCardValidate.js"></script>
+<script src="modules/support/service/messagebox.js"></script>
+
+<!------------------------------------功能模块------------------------------------>
+
+<!-- 个人登陆 -->
+<script src="modules/person/PersonLoginFormController.js"></script>
+<script src="modules/person/PasswordController.js"></script>
+<script src="modules/person/PersonService.js"></script>
+<script src="modules/person/RegisterController.js"></script>
+<script src="modules/person/routes.js"></script>
+
+<!-- 企业登陆 -->
+<script src="modules/enterprise/EnterpriseLoginFormController.js"></script>
+<script src="modules/enterprise/EnterpriseService.js"></script>
+<script src="modules/enterprise/routes.js"></script>
+<!-- 本溪 -->
+<script src="modules/enterprise/BxEnterpriseLoginFormController.js"></script>
+
+<!-- CA企业登陆 -->
+<script src="modules/ca/CALoginFormController.js"></script>
+<script src="modules/ca/CAService.js"></script>
+<script src="modules/ca/routes.js"></script>
+<script src="modules/ca/gxca.js"></script>
+<script src="modules/ca/dfca.js"></script>
+<script src="modules/ca/NEUCA.js"></script>
+
+<!-- 学校登录 -->
+<script src="modules/school/schoolLoginController.js"></script>
+<script src="modules/school/schoolLoginService.js"></script>
+<script src="modules/school/routes.js"></script>
+
+<!-- 专家登录 -->
+<script src="modules/expert/ExpertPasswordController.js"></script>
+<script src="modules/expert/ExpertPersonLoginFormController.js"></script>
+<script src="modules/expert/ExpertPersonService.js"></script>
+<script src="modules/expert/ExpertRegisterController.js"></script>
+<script src="modules/expert/routes.js"></script>
+
+
+<!-- 建筑单位登录 -->
+<!--<script src="modules/siagent/SiagentActiveController.js"></script>-->
+<!--<script src="modules/siagent/SiagentLoginFormController.js"></script>-->
+<!--<script src="modules/siagent/SiagentPasswordController.js"></script>-->
+<!--<script src="modules/siagent/SiagentService.js"></script>-->
+<!--<script src="modules/siagent/routes.js"></script>-->
+
+<!--[非常重要]模块定义js申明禁止超过这一行&注意不要删除下面的注释标签!-->
+<!-- endbuild -->
+
+
+</body>
+</html>
