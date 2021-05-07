@@ -31,6 +31,12 @@ public class PersonUserDTOAssembler {
         return user;
     }
 
+
+
+
+
+
+
     /**
      * 个人用户实体转换成DTO
      * 

@@ -11,6 +11,8 @@ import com.neusoft.sl.girder.ddd.hibernate.utils.SpringContextUtils;
 import com.neusoft.sl.si.authserver.base.domains.user.*;
 import com.neusoft.sl.si.authserver.base.services.user.UserCustomService;
 import com.neusoft.sl.si.authserver.password.CheckPwdService;
+import com.neusoft.sl.si.authserver.uaa.controller.interfaces.user.dto.PersonUserDTO;
+import com.neusoft.sl.si.authserver.uaa.controller.interfaces.user.dto.PersonUserDTOAssembler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -41,6 +43,9 @@ public class UserLoginWithImgCaptchaRequestProcessingFilter extends AbstractAuth
     private PasswordErrorRedisManager passwordErrorRedisManager;
 
     private TempUserRepository tempUserRepository;
+   
+    private PersonTempUserRepository personTempUserRepository;
+
 
     private ThinUserRepository thinUserRepository;
 
@@ -66,6 +71,40 @@ public class UserLoginWithImgCaptchaRequestProcessingFilter extends AbstractAuth
             throw new CaptchaErrorException("请输入密码");
         }
 
+        //本溪个人老项目静默注册
+        //校验是否已经转换，如果已经转换则不需要查询转换表
+        //先查询是否存在tuser 存在则校验是否是转换用户，如果是 则 锁定用户，否则校验转换用户名密码
+        if (null == thinUserRepository.findByIdNumber(username) && request.getRequestURI().contains("person")) {
+            
+            CheckPwdService checkPwdService = SpringContextUtils.getBean("benxiCheckPwdService");
+
+            log.debug("idNumber = {}",username);
+            PersonTempUser personTempUser = personTempUserRepository.findByIdNumber(username);
+            log.debug("repo = {}",personTempUserRepository);
+            if (null != personTempUser && thinUserRepository.findByIdNumber(username)== null) {
+                //匹配密码 生成新用户
+                if (checkPwdService.matchbenxi(userpassword, personTempUser.getPassword())) {
+                    //塞数据
+                    PersonUserDTO personUserDTO = new PersonUserDTO();
+                    personUserDTO.setIdNumber(personTempUser.getIdNumber());
+                    personUserDTO.setName(personTempUser.getName());
+                    personUserDTO.setPassword(personTempUser.getPassword());
+                    personUserDTO.setAccount(personTempUser.getIdNumber());
+                    User user = PersonUserDTOAssembler.crtfromDTO(personUserDTO);
+                    user.setIdType("01");
+                    user.setExtension("benxi_old_autoReg");
+                    // 保存user对象
+                    userCustomService.createPersonBenxi(user);
+                }
+
+            } else if (null == personTempUser &&thinUserRepository.findByIdNumber(username)== null){
+                throw new BadCredentialsException("用户名密码错误");
+            }
+
+        }
+        
+        
+        
         //校验是否已经转换，如果已经转换则不需要查询转换表
         //先查询是否存在tuser 存在则校验是否是转换用户，如果是 则 锁定用户，否则校验转换用户名密码
         if (null == thinUserRepository.findByAccount(username) && !request.getRequestURI().contains("person")) {
@@ -156,6 +195,14 @@ public class UserLoginWithImgCaptchaRequestProcessingFilter extends AbstractAuth
 
     public void setTempUserRepository(TempUserRepository tempUserRepository) {
         this.tempUserRepository = tempUserRepository;
+    }
+
+    public PersonTempUserRepository getPersonTempUserRepository() {
+        return personTempUserRepository;
+    }
+
+    public void setPersonTempUserRepository(PersonTempUserRepository personTempUserRepository) {
+        this.personTempUserRepository = personTempUserRepository;
     }
 
     public ThinUserRepository getThinUserRepository() {

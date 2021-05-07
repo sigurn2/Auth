@@ -37,6 +37,8 @@ public class PersonUserDetailService implements UserDetailsService {
 		if (null == user || !"2".equals(user.getUserTypeString())) {
 			throw new BadCredentialsException("您输入的账号不存在，请重新输入");
 		}
+
+
 		if (!user.isActivated()) {
 			throw new BadCredentialsException("您输入的账号未激活");
 		}

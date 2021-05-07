@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.Filter;
 
+import com.neusoft.sl.si.authserver.base.domains.user.PersonTempUserRepository;
 import com.neusoft.sl.si.authserver.base.domains.user.TempUserRepository;
 import com.neusoft.sl.si.authserver.base.domains.user.ThinUserRepository;
 import com.neusoft.sl.si.authserver.base.services.user.UserCustomService;
@@ -55,6 +56,8 @@ public abstract class AbstractSecurityConfiguration extends WebSecurityConfigure
 	@Autowired
 	private TempUserRepository tempUserRepository;
 
+	@Autowired
+	private PersonTempUserRepository personTempUserRepository;
 	@Autowired
 	private ThinUserRepository userRepository;
 
@@ -150,6 +153,7 @@ public abstract class AbstractSecurityConfiguration extends WebSecurityConfigure
 		filter.setAuthenticationFailureHandler(getFailureHandler());
 		filter.setPasswordErrorRedisManager(passwordErrorRedisManager);
 		filter.setCaptchaRequestService(captchaRequestService);
+		filter.setPersonTempUserRepository(personTempUserRepository);
 		filter.setTempUserRepository(tempUserRepository);
 		filter.setThinUserRepository(userRepository);
 		filter.setUserCustomService(userCustomService);

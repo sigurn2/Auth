@@ -20,6 +20,9 @@ public interface CheckPwdService {
     default boolean match(String password,String tempPwd){
         return encrypt(password).equals(tempPwd);
     }
+    default boolean matchbenxi(String password,String tempPwd){
+        return password.equals(tempPwd);
+    }
 
 
 
