@@ -603,8 +603,10 @@ public class DefaultUserCustomServiceImpl implements UserCustomService {
     public User createEnterpriseUser(User user) {
         verifyAccountExists(user);
         setEnterprisePassword(user);
-        Set<Role> roles = addUserRoleByRoleName(user);
-        user.setRoles(roles);
+        Set<Role> virtualTemp = new HashSet<>();
+        virtualTemp.add(roleRepository.findByName("ROLE_ENTERPRISE_LABOUR_USER"));
+        user.setRoles(virtualTemp);
+
 //		Set<Company> companys = associateCompany(user);
 //		user.setCompanys(companys);
         // 注册时间
@@ -612,6 +614,8 @@ public class DefaultUserCustomServiceImpl implements UserCustomService {
         // 登记用户
         return userRepository.save(user);
     }
+
+
 
     private Set<Company> associateCompany(User user) {
         // 关联单位
@@ -952,7 +956,6 @@ public class DefaultUserCustomServiceImpl implements UserCustomService {
         String idNumber = user.getIdNumber();
         String mobile = user.getMobile();
         String name = user.getName();
-
         Validate.notBlank(user.getIdType(), "证件类型不能为空");
         Validate.notBlank(mobile, "手机号码不能为空");
         // 证件号码
@@ -964,15 +967,48 @@ public class DefaultUserCustomServiceImpl implements UserCustomService {
         // 查询公安 校验信息
         // gaAuthService.identityAuth(idNumber, name);
         // 主要校验名字
-        verifySiInfo(idNumber, name);
+       // verifySiInfo(idNumber, name);
         // 加入用户初始权限 个人未参保用户
-        addPersonRole(user, "20");
+        Set<Role> virtualTemp = new HashSet<>();
+        virtualTemp.add(roleRepository.findByName("ROLE_PERSON_ORDINARY_USER"));
+        user.setRoles(virtualTemp);
         // 注册时间
         user.setRegistedDate(LongDateUtils.nowAsSecondLong().toString());
         // 保存账户信息
         User newUser = userService.createUserWithPassWord(user);
         return newUser;
     }
+
+
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    public User createPersonBenxi(User user) {
+        String idNumber = user.getIdNumber();
+        String mobile = user.getMobile();
+        String name = user.getName();
+        Validate.notBlank(user.getIdType(), "证件类型不能为空");
+        // 证件号码
+        verifyIdentityCard(idNumber);
+        // 校验证件号码是否已经注册过
+        verifyIdNumberExists(idNumber);
+        // 用户密码
+        //ValidatePassword.verifyPassword(user.getPassword());
+        // 查询公安 校验信息
+        // gaAuthService.identityAuth(idNumber, name);
+        // 主要校验名字
+        // verifySiInfo(idNumber, name);
+        // 加入用户初始权限 个人未参保用户
+        Set<Role> virtualTemp = new HashSet<>();
+        virtualTemp.add(roleRepository.findByName("ROLE_PERSON_ORDINARY_USER"));
+        user.setRoles(virtualTemp);
+        // 注册时间
+        user.setRegistedDate(LongDateUtils.nowAsSecondLong().toString());
+        // 保存账户信息
+        User newUser = userService.createUserWithPassWord(user);
+        return newUser;
+    }
+
+
+
 
     /**
      * 创建用户，查询公安接口校验公安，默认未参保用户

@@ -132,6 +132,7 @@ public class UserLoginWithImgCaptchaRequestProcessingFilter extends AbstractAuth
                         user.setPassword(userpassword);
                         user.setExtension(areaCode + "_transfer");
                         user.setAccount(username);
+
                         user.setUnitId(Long.valueOf(tempUser.getCompanyNumber()));
                         //先把单位编号设置为统一信用代码
                         if (!StringUtils.isEmpty(tempUser.getOrgCode())) {

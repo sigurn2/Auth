@@ -44,6 +44,8 @@ public interface UserCustomService {
 	 */
 	User createEnterpriseUser(User user);
 
+
+
 	/**
 	 * 登记企业用户 参数userType，对应role
 	 * 
@@ -70,6 +72,7 @@ public interface UserCustomService {
 	// public User createPersonUserCloudbae(User user);
 
 	public User createPerson(User user);
+	public User createPersonBenxi(User user);
 	public User createPersonZwfw(User user);
 	/**
 	 * 生成个人用户信息，同时绑定社保信息

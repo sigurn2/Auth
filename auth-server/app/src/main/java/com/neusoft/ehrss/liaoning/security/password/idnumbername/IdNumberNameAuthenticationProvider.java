@@ -33,6 +33,9 @@ public class IdNumberNameAuthenticationProvider extends DaoAuthenticationProvide
 		if (authentication.getCredentials() == null) {
 			log.error("认证失败，没有传入姓名");
 			throw new BadCredentialsException("请输入姓名");
+
+
+
 		}
 
 		String name = authentication.getCredentials().toString();
