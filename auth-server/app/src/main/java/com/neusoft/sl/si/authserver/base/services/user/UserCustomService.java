@@ -26,9 +26,9 @@ public interface UserCustomService {
 	public User createExpertUser(User user, String personNumber, HttpServletRequest request);
 
 	public void resetPasswordForFace(HttpServletRequest request);
-
+	public void updateIdNumberForZwfwApp(String account,String idNumber);
 	public void resetPassword(PassWordResetDetailDTO passWordResetDetailDTO, HttpServletRequest request);
-
+	public void updateNameForZwfwApp(String account,String name);
 	public void updateUserForPersonAndRole(String idNumber);
 	public void updateUserForEntAndRoleZwfw(String orgCode,String companyName);
 	public void updateUserForEntAndRole(Long unitId);

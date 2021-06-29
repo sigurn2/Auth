@@ -1,13 +1,17 @@
 package com.neusoft.ehrss.liaoning.security;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.neusoft.ehrss.liaoning.security.implicit.alipay.controller.enums.AreaCodeEnum;
+
 import com.neusoft.sl.girder.ddd.hibernate.utils.SpringContextUtils;
+import com.neusoft.sl.si.authserver.base.domains.role.Role;
+import com.neusoft.sl.si.authserver.base.domains.role.RoleRepository;
 import com.neusoft.sl.si.authserver.base.domains.user.*;
 import com.neusoft.sl.si.authserver.base.services.user.UserCustomService;
 import com.neusoft.sl.si.authserver.password.CheckPwdService;
@@ -15,6 +19,7 @@ import com.neusoft.sl.si.authserver.uaa.controller.interfaces.user.dto.PersonUse
 import com.neusoft.sl.si.authserver.uaa.controller.interfaces.user.dto.PersonUserDTOAssembler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -45,7 +50,8 @@ public class UserLoginWithImgCaptchaRequestProcessingFilter extends AbstractAuth
     private TempUserRepository tempUserRepository;
    
     private PersonTempUserRepository personTempUserRepository;
-
+    @Autowired
+    private RoleRepository roleRepository;
 
     private ThinUserRepository thinUserRepository;
 
@@ -70,6 +76,9 @@ public class UserLoginWithImgCaptchaRequestProcessingFilter extends AbstractAuth
         if (StringUtils.isEmpty(userpassword)) {
             throw new CaptchaErrorException("请输入密码");
         }
+
+
+
 
         //本溪个人老项目静默注册
         //校验是否已经转换，如果已经转换则不需要查询转换表
@@ -107,32 +116,19 @@ public class UserLoginWithImgCaptchaRequestProcessingFilter extends AbstractAuth
         
         //校验是否已经转换，如果已经转换则不需要查询转换表
         //先查询是否存在tuser 存在则校验是否是转换用户，如果是 则 锁定用户，否则校验转换用户名密码
-        if (null == thinUserRepository.findByAccount(username) && !request.getRequestURI().contains("person")) {
-            areaCode = "210500";
-            if (StringUtils.isEmpty(areaCode)) {
-                areaCode = "210500";
-            }
-            //获取老用户名密码是否匹配
-
-                username = areaCode + "@@" + username;
-             //   try{
-             //       CheckPwdService checkPwdService = SpringContextUtils.getBean(AreaCodeEnum.getValue(areaCode) + "CheckPwdService");
-             //   }catch(Exception e){
-             //       throw new BadCredentialsException("请更换到虚拟网厅入口或市级单位网厅原账号登录入口登录！");
-             //   }
+        if (null == thinUserRepository.findByAccount(username) && request.getRequestURI().contains("enterprise")) {
                 CheckPwdService checkPwdService = SpringContextUtils.getBean("benxiCheckPwdService");
                 //校验是否老用户
-                log.debug("repo = {},tempuser= {},username = {}, areacode = {}",tempUserRepository, tempUserRepository.findByUsernameAndAreaCode(username.substring(8), areaCode),username.substring(8),areaCode);
-                TempUser tempUser = tempUserRepository.findByUsernameAndAreaCode(username.substring(8), areaCode);
+                log.debug("repo = {},tempuser= {}",tempUserRepository, tempUserRepository.findByUsername(username));
+                TempUser tempUser = tempUserRepository.findByUsername(username);
                 if (null != tempUser && thinUserRepository.findByAccount(username)== null) {
                     //匹配密码 生成新用户
                     if (checkPwdService.match(userpassword, tempUser.getPassword())) {
                         EnterpriseUserFactory factory = new EnterpriseUserFactory();
                         User user = factory.createEnterpriseUser("0", username, tempUser.getCompanyName(), "", "", null);
                         user.setPassword(userpassword);
-                        user.setExtension(areaCode + "_transfer");
+                        user.setExtension("LSPY_benxi_enterprise_old_autoReg");
                         user.setAccount(username);
-
                         user.setUnitId(Long.valueOf(tempUser.getCompanyNumber()));
                         //先把单位编号设置为统一信用代码
                         if (!StringUtils.isEmpty(tempUser.getOrgCode())) {

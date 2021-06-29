@@ -65,10 +65,10 @@ public class MobileUserDetailsService implements UserDetailsService {
         String captchaWord = arrays[3];
 
 
-//        String img = captchaRequestService.imgCaptchaRequest(captchaId, captchaWord);
-//        if (!"".equals(img)) {
-//            throw new CaptchaErrorException(img);
-//        }
+         String img = captchaRequestService.imgCaptchaRequest(captchaId, captchaWord);
+         if (!"".equals(img)) {
+             throw new CaptchaErrorException(img);
+         }
         ThinUser thinUser = thinUserRepository.findByAccount(username);
         //后门单位
         if (username.equals("210102196404224110") || username.equals("211204195011250531") || username.equals("210882197801190318") || username.equals("211121196005113413") || username.equals("211225197402262813") || username.equals("211225193012273025")) {
@@ -111,12 +111,16 @@ public class MobileUserDetailsService implements UserDetailsService {
 
             } else {
                 JSONObject json = checkUserPwd(username, password);
+                ZwfwUserDTO userDTO = JSONObject.parseObject(json.get("result").toString(), ZwfwUserDTO.class);
+                log.debug("json={}",json.get("result").toString());
+                //政务网数据和我们的数据不一样的话
+                if (!userDTO.getIdNumber().equals(thinUser.getIdNumber())){
+                    userCustomService.updateIdNumberForZwfwApp(userDTO.getUsername(), userDTO.getIdNumber());
+                }
+                if (!userDTO.getName().equals(thinUser.getName())){
+                    userCustomService.updateNameForZwfwApp(userDTO.getUsername(),userDTO.getName());
+                }
                 if ("0000".equals(json.get("code"))) {
-                    if (StringUtils.isEmpty(thinUser.getEmail())){
-                        ZwfwUserDTO userDTO = JSONObject.parseObject(json.get("result").toString(), ZwfwUserDTO.class);
-                        thinUser.setEmail(userDTO.getUuid());
-                        thinUserRepository.save(thinUser);
-                    }
                     return new MobileUserDetails(thinUser);
                 } else {
                     throw new BadCredentialsException("用户名密码错误");
@@ -128,23 +132,58 @@ public class MobileUserDetailsService implements UserDetailsService {
     private JSONObject checkUserPwd(String username, String password) {
         String request = null;
         try {
-            request = DemoDesUtil.encrypt("{\"score\":\"1\",\"username\":\"" + username + "\",\"password\":\"" + DemoDesUtil.encPwd(password) + "\",\"method\":\"loginnp\",\"service\":\"user\",\"version\":\"1.0.0\",\"key\":\"E2A243476964ABAF584C7DFA76A6F949\",\"token\":\"00000000000000000000000000000000\"}", DemoDesUtil.getDtKey());
+            if (username.length()==18 || username.length()==11){
+                //身份证号登录或者手机号登录
+                request = DemoDesUtil.encrypt("{\"score\":\"1\",\"username\":\"" + Des3Tools.encode(username) + "\",\"password\":\"" + DemoDesUtil.encPwd(password) + "\",\"method\":\"loginnp\",\"service\":\"user\",\"version\":\"1.0.0\",\"key\":\"E2A243476964ABAF584C7DFA76A6F949\",\"token\":\"00000000000000000000000000000000\"}", DemoDesUtil.getDtKey());
+
+            } else {
+                request = DemoDesUtil.encrypt("{\"score\":\"1\",\"username\":\"" + username + "\",\"password\":\"" + DemoDesUtil.encPwd(password) + "\",\"method\":\"loginnp\",\"service\":\"user\",\"version\":\"1.0.0\",\"key\":\"E2A243476964ABAF584C7DFA76A6F949\",\"token\":\"00000000000000000000000000000000\"}", DemoDesUtil.getDtKey());
+            }
+
         } catch (Exception e) {
             throw new BadCredentialsException("加解密错误");
         }
         log.debug("================调取政务网获取用户信息request ={}========", request);
         String encryptUser = HttpClientTools.httpPostToApp(zwfwAppUrl, request, host, port);
-        log.debug("11111 encryptUser={} ",encryptUser);
+
         JSONObject json = null;
+
         try {
             json = JSONObject.parseObject(DemoDesUtil.decrypt(encryptUser, DemoDesUtil.getDtKey()));
-            log.debug("json为",json);
         } catch (Exception e) {
-            log.error(" error json={}",json);
             throw new BadCredentialsException("加解密错误");
         }
+
+
+        // 当用户名是11/18位的时候
+
+        if (json.get("msg").toString().equals("登录信息错误")){
+
+            try {
+                request = DemoDesUtil.encrypt("{\"score\":\"1\",\"username\":\"" + username + "\",\"password\":\"" + DemoDesUtil.encPwd(password) + "\",\"method\":\"loginnp\",\"service\":\"user\",\"version\":\"1.0.0\",\"key\":\"E2A243476964ABAF584C7DFA76A6F949\",\"token\":\"00000000000000000000000000000000\"}", DemoDesUtil.getDtKey());
+            } catch (Exception e) {
+                throw new BadCredentialsException("加解密错误");
+            }
+
+            log.debug("================调取政务网获取用户信息request ={}========", request);
+            String encryptUser1 = HttpClientTools.httpPostToApp(zwfwAppUrl, request, host, port);
+            try {
+                json = JSONObject.parseObject(DemoDesUtil.decrypt(encryptUser1, DemoDesUtil.getDtKey()));
+            } catch (Exception e) {
+                throw new BadCredentialsException("加解密错误");
+            }
+        }
+
         log.debug("登录校验json = {}", json);
+        if (!"0000".equals(json.get("code"))) {
+            throw new BadCredentialsException("登录失败," + json.get("msg"));
+        }
+        JSONObject reljson= json.getJSONObject("result");
+        if (reljson.get("IDSFLD_IDSEXT_RELNAMEAUTH").toString().equals("0")){
+            throw new BadCredentialsException("该用户未实名，无法登录，请登录辽宁政务服务网进行实名验证！");
+        }
         return json;
     }
+
 
 }

@@ -1,12 +1,13 @@
 package com.neusoft.sl.si.authserver.uaa.controller.interfaces.user;
 
 import javax.servlet.http.HttpServletRequest;
+
 import com.alibaba.fastjson.JSONObject;
 import com.neusoft.ehrss.liaoning.util.DesHelp;
 import com.neusoft.ehrss.liaoning.utils.DemoDesUtil;
 import com.neusoft.ehrss.liaoning.utils.HttpClientTools;
 import com.neusoft.ehrss.liaoning.utils.HttpResultDTO;
-import com.neusoft.sl.si.authserver.uaa.controller.interfaces.user.dto.ZwfwRegisterDTO;
+import com.neusoft.sl.si.authserver.uaa.controller.interfaces.user.dto.*;
 import org.neo4j.cypher.internal.compiler.v2_1.functions.Str;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,9 +29,6 @@ import com.neusoft.sl.girder.ddd.core.exception.ResourceNotFoundException;
 import com.neusoft.sl.girder.utils.UuidUtils;
 import com.neusoft.sl.si.authserver.base.domains.user.User;
 import com.neusoft.sl.si.authserver.base.services.user.UserCustomService;
-import com.neusoft.sl.si.authserver.uaa.controller.interfaces.user.dto.AtmVerifyResultDTO;
-import com.neusoft.sl.si.authserver.uaa.controller.interfaces.user.dto.PersonUserDTO;
-import com.neusoft.sl.si.authserver.uaa.controller.interfaces.user.dto.PersonUserDTOAssembler;
 import com.neusoft.sl.si.authserver.uaa.exception.CaptchaErrorException;
 import com.neusoft.sl.si.authserver.uaa.filter.captcha.CaptchaRequestService;
 import com.neusoft.sl.si.authserver.uaa.log.UserLogManager;
@@ -43,7 +41,7 @@ import java.io.UnsupportedEncodingException;
 
 /**
  * 个人用户控制器
- * 
+ *
  * @author mojf
  *
  */
@@ -98,7 +96,7 @@ public class PersonUserRestController {
 		try {
 			register(userDTO);
 		}catch (Exception e) {
-		    throw new BadCredentialsException("注册失败"+ e.getMessage());
+			throw new BadCredentialsException("注册失败"+ e.getMessage());
 		}
 
 		User user = PersonUserDTOAssembler.crtfromDTO(userDTO);
@@ -154,18 +152,9 @@ public class PersonUserRestController {
 
 		String checkRequest = DemoDesUtil.encrypt("{\"score\":\"1\",\"field\":\"" + type + "\",\"method\":\"param\",\"service\":\"check\",\"value\":\""+ param + "\",\"version\":\"1.0.0\",\"key\":\"E2A243476964ABAF584C7DFA76A6F949\",\"token\":\"00000000000000000000000000000000\"}",DemoDesUtil.getDtKey());
 		log.debug("checkReuqest = {}, type = {},value  = {}",checkRequest, type,param );
-//		String code =  JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, checkRequest,host,port), DemoDesUtil.getDtKey())).get("code").toString();
-//		String msg = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, checkRequest,host,port), DemoDesUtil.getDtKey())).get("msg").toString();
-//		Boolean checkFlag = Boolean.parseBoolean(JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, checkRequest,host,port), DemoDesUtil.getDtKey())).get("result").toString());
-		String appEncryptText = HttpClientTools.httpPostToApp(zwfwAppUrl, checkRequest,host,port);
-		log.debug("appText={}",appEncryptText);
-		String appText = DemoDesUtil.decrypt(appEncryptText,DemoDesUtil.getDtKey());
-		log.debug("appText={}",appText);
-		JSONObject appObj = JSONObject.parseObject(appText);
-		String code =appObj.getString("code");
-		String msg =appObj.getString("msg");
-		String result = appObj.getString("result");
-		Boolean checkFlag =  Boolean.parseBoolean(result);
+		String code =  JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, checkRequest,host,port), DemoDesUtil.getDtKey())).get("code").toString();
+		String msg = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, checkRequest,host,port), DemoDesUtil.getDtKey())).get("msg").toString();
+		Boolean checkFlag = Boolean.parseBoolean(JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, checkRequest,host,port), DemoDesUtil.getDtKey())).get("result").toString());
 		//if (resultDTO.getData())
 		if (!"0000".equals(code)){
 			throw new BadCredentialsException("接口校验失败"+ msg);
@@ -184,21 +173,28 @@ public class PersonUserRestController {
 	}
 
 	public void register( PersonUserDTO dto) throws Exception {
-		ZwfwRegisterDTO registerDTO = new ZwfwRegisterDTO(dto.getAccount(),dto.getIdNumber(),dto.getName(),dto.getMobilenumber(),DemoDesUtil.encPwd(dto.getPassword()),dto.getBirthday(),dto.getStartDate(),dto.getEndDate());
-//		String checkRequest = DemoDesUtil.encrypt("{\"score\":\"1\",\"password\":\"" +dto.getPassword() +"\",\"credittype\":\"10\",\"creditId\":\""+dto.getIdNumber()+"\",\"method\":\"register\",\""+dto.getIdNumber()+"\",\"username\":\""+ dto.getAccount() +"\",\"service\":\"check\",\"truename\":\""+ dto.getName() + "\",\"version\":\"1.0.0\",\"key\":\"E2A243476964ABAF584C7DFA76A6F949\",\"token\":\"00000000000000000000000000000000\"}",DemoDesUtil.getDtKey());
+
+		//实名认证
+		RealAuthDTO realAuthDTO=new RealAuthDTO(dto.getIdNumber(),dto.getName());
+		String realAuthRequest= DemoDesUtil.encrypt(JSONObject.toJSONString(realAuthDTO),DemoDesUtil.getDtKey());
+		JSONObject realAuthjson = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, realAuthRequest,host,port), DemoDesUtil.getDtKey()));
+		String realBoolean = realAuthjson.get("result").toString();
+
+		if (!"true".equals(realBoolean)){
+			throw new BadCredentialsException("注册失败,实名验证未通过，请检查您输入的姓名，身份证是否无误");
+		}
+
+		//注册
+		ZwfwRegisterDTO registerDTO = new ZwfwRegisterDTO(dto.getAccount(),dto.getIdNumber(),dto.getName(),dto.getMobilenumber(),DemoDesUtil.encPwd(dto.getPassword()));
 		String registerRequest = DemoDesUtil.encrypt(JSONObject.toJSONString(registerDTO),DemoDesUtil.getDtKey());
-		//log.debug("checkReuqest = {}, type = {},value  = {}",checkRequest, type,param );
 		JSONObject json = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, registerRequest,host,port), DemoDesUtil.getDtKey()));
-		//HttpResultDTO  resultDTO =  JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, registerRequest,host,port), DemoDesUtil.getDtKey()),HttpResultDTO.class);
-		log.debug("register json ={}",json);
 		String msg = json.get("msg").toString();
 		String code = json.get("code").toString();
-		//JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, registerRequest), DemoDesUtil.getDtKey())).get("result").toString();
-		//if (resultDTO.getData())
 
 		if (!"0000".equals(code)){
 			throw new BadCredentialsException("注册失败" + msg);
 		}
+
 	}
 
 }

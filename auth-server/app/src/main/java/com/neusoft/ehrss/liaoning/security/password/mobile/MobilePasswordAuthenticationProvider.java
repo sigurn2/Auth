@@ -1,13 +1,6 @@
 package com.neusoft.ehrss.liaoning.security.password.mobile;
 
-import com.alibaba.fastjson.JSONObject;
-import com.neusoft.ehrss.liaoning.utils.DemoDesUtil;
-import com.neusoft.ehrss.liaoning.utils.HttpClientTools;
 import com.neusoft.sl.si.authserver.base.services.user.UserService;
-import com.neusoft.sl.si.authserver.uaa.controller.interfaces.user.dto.ZwfwRegisterDTO;
-import org.apache.logging.log4j.core.util.UuidUtil;
-import org.hibernate.id.UUIDGenerator;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.AuthenticationException;

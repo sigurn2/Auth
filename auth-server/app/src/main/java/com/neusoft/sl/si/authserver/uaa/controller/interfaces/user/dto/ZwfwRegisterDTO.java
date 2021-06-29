@@ -44,7 +44,7 @@ public class ZwfwRegisterDTO {
     @ApiModelProperty("身份证终止日期")
     private String IDSEXT_certExpDate;
 
-private String key;
+     private String key;
 
     public String getKey() {
         return key;
@@ -174,7 +174,7 @@ private String key;
         this.IDSEXT_certExpDate = IDSEXT_certExpDate;
     }
 
-    public ZwfwRegisterDTO(String username, String creditId, String truename, String mobile, String password, String birthday, String IDSEXT_certEffDate, String IDSEXT_certExpDate) {
+    public ZwfwRegisterDTO(String username, String creditId, String truename, String mobile, String password) {
        this.key="E2A243476964ABAF584C7DFA76A6F949";
         this.service="user";
         this.score="1";
@@ -188,8 +188,11 @@ private String key;
         this.truename = truename;
         this.mobile = mobile;
         this.password = password;
-        this.birthday = birthday;
-        this.IDSEXT_certEffDate = IDSEXT_certEffDate;
-        this.IDSEXT_certExpDate = IDSEXT_certExpDate;
+
     }
+
+
+
+
+
 }

@@ -177,6 +177,22 @@ public class DefaultUserCustomServiceImpl implements UserCustomService {
         resetPasswordTokenService.remove(token);
     }
 
+
+    //政务网身份证和本地不一样
+    public void updateIdNumberForZwfwApp(String account,String idNumber){
+        User user = userRepository.findByAccount(account);
+        user.setIdNumber(idNumber);
+        userRepository.save(user);
+
+    }
+
+    //政务网姓名和本地不一样
+    public void updateNameForZwfwApp(String account,String name){
+        User user = userRepository.findByAccount(account);
+        user.setName(name);
+        userRepository.save(user);
+    }
+
     /**
      * 重置密码
      *
@@ -324,94 +340,10 @@ public class DefaultUserCustomServiceImpl implements UserCustomService {
         LOGGER.debug("companys = {}", companys);
         User user = userRepository.findByUnitId(unitId);
         Set<Role> temp = new HashSet<>();
-
-        //只有社保角色
-        if (companys.size() == 1 && companys.get(0).getName() != null) {
-            LOGGER.debug("companys.getLevel = {}", companys.get(0).getLevel());
-            if (companys.get(0).getLevel() == 0) {
-                temp.add(roleRepository.findByName("ROLE_ENTERPRISE_SIMIS_USER"));
-                if ("210500".equals(companys.get(0).getSocialPoolCode())) {
-                    temp.add(roleRepository.findByName("ROLE_ENTERPRISE_PRILABOUR_USER"));
-                } else {
-                    temp.add(roleRepository.findByName("ROLE_ENTERPRISE_PRILABOUR_USER" ));
-                }
-            } else if (companys.get(0).getLevel() == 1) {
-                temp.add(roleRepository.findByName("ROLE_ENTERPRISE_SIMIS_LEVEL_ONE_USER"));
-
-                if ("210500".equals(companys.get(0).getSocialPoolCode())) {
-                    temp.add(roleRepository.findByName("ROLE_ENTERPRISE_PRILABOUR_USER"));
-                } else {
-                    temp.add(roleRepository.findByName("ROLE_ENTERPRISE_PRILABOUR_USER"));
-                }
-            } else {
-                temp.add(roleRepository.findByName("ROLE_ENTERPRISE_SIMIS_LEVEL_TWO_USER"));
-                if ("210500".equals(companys.get(0).getSocialPoolCode())) {
-                    temp.add(roleRepository.findByName("ROLE_ENTERPRISE_PRILABOUR_USER"));
-                }else{
-                    temp.add(roleRepository.findByName("ROLE_ENTERPRISE_PRILABOUR_USER"));
-                }
-
-            }
-
-            user.setRoles(temp);
-        }
-        //既没有社保也没有就业
-        else if (companys.size() == 1 && companys.get(0).getName() == null) {
-            temp.add(roleRepository.findByName("ROLE_ENTERPRISE_PRISIMIS_USER"));
-            temp.add(roleRepository.findByName("ROLE_ENTERPRISE_PRILABOUR_USER"));
-            user.setRoles(temp);
-        }
-        //有就业没有社保
-        else if (companys.size() == 2 && companys.get(1).getName() == null) {
-            temp.add(roleRepository.findByName("ROLE_ENTERPRISE_PRISIMIS_USER"));
-            temp.add(roleRepository.findByName("ROLE_ENTERPRISE_LABOUR_USER"));
-            user.setRoles(temp);
-        }
-        ////既有社保又有就业
-        else {
-            LOGGER.debug("companys.getLevel = {}", companys.get(1).getLevel() == 1);
-
-            if (companys.get(1).getLevel() == 0) {
-                temp.add(roleRepository.findByName("ROLE_ENTERPRISE_SIMIS_USER"));
-                if ("210500".equals("210500")) {
-                    temp.add(roleRepository.findByName("ROLE_ENTERPRISE_LABOUR_USER"));
-                } else {
-                    temp.add(roleRepository.findByName("ROLE_ENTERPRISE_LABOUR_USER"));
-                }
-            } else if (companys.get(1).getLevel() == 1) {
-                temp.add(roleRepository.findByName("ROLE_ENTERPRISE_SIMIS_LEVEL_ONE_USER"));
-                if ("210500".equals("210500")) {
-                    temp.add(roleRepository.findByName("ROLE_ENTERPRISE_LABOUR_USER"));
-
-                } else {
-                    temp.add(roleRepository.findByName("ROLE_ENTERPRISE_LABOUR_USER"));
-
-                }
-            } else {
-                temp.add(roleRepository.findByName("ROLE_ENTERPRISE_SIMIS_LEVEL_TWO_USER"));
-                if ("210500".equals("210500")) {
-                    temp.add(roleRepository.findByName("ROLE_ENTERPRISE_LABOUR_USER"));
-                } else {
-                    temp.add(roleRepository.findByName("ROLE_ENTERPRISE_LABOUR_USER"));
-                }
-            }
-            user.setRoles(temp);
-        }
+        temp.add(roleRepository.findByName("ROLE_ENTERPRISE_LABOUR_USER"));
+        user.setRoles(temp);
         LOGGER.debug("account = {}", user.getAccount());
-        //虚拟单位且密码为123456单独授权
-        if (user.getExtension().startsWith("LSPY") && !user.getPassword().equals(passwordEncoderService.encryptPassword("123456"))) {
-            Set<Role> virtualTemp = new HashSet<>();
-            virtualTemp.add(roleRepository.findByName("ROLE_ENTERPRISE_LABOUR_USER"));
-            virtualTemp.add(roleRepository.findByName("ROLE_ENTERPRISE_SIMIS_USER"));
-            user.setRoles(virtualTemp);
-        } else if (user.getExtension().startsWith("LSPY") && user.getPassword().equals(passwordEncoderService.encryptPassword("123456"))) {
-            LOGGER.debug("校验虚拟单位密码123456  ");
-            Set<Role> virtualTemp = new HashSet<>();
-            virtualTemp.add(roleRepository.findByName("ROLE_ENTERPRISE_LABOUR_USER"));
-            user.setRoles(virtualTemp);
-        }
         userRepository.save(user);
-
     }
 
 

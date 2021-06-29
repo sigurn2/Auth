@@ -20,9 +20,9 @@ public interface TempUserRepository extends JpaRepository<TempUser, String>, Jpa
      * @param username
      * @return
      */
-    TempUser findByUsernameAndAreaCode(String username,String areaCode);
+    TempUser findByUsername(String username);
 
-    List<TempUser> findByUsername(String username);
+  //  List<TempUser> findByUsername(String username);
 
 
 }
