@@ -220,8 +220,8 @@ public class DefaultUserCustomServiceImpl implements UserCustomService {
 //        if (StringUtils.isEmpty(mobilenumber)) {
 //            throw new BusinessException("未预留手机号");
 //        }
-//        // 校验短信验证码
-//        String sms = captchaRequestService.smsCaptchaRequest(mobilenumber, request);
+//校验短信验证码
+       // String sms = captchaRequestService.smsCaptchaRequest(mobilenumber, request);
 //        if (!"".equals(sms)) {
 //            throw new CaptchaErrorException(sms);
 //        }

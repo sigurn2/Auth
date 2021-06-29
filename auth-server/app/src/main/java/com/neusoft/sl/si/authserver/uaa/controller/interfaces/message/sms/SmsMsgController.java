@@ -2,12 +2,18 @@ package com.neusoft.sl.si.authserver.uaa.controller.interfaces.message.sms;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.alibaba.fastjson.JSONObject;
+import com.neusoft.ehrss.liaoning.utils.DemoDesUtil;
+import com.neusoft.ehrss.liaoning.utils.Des3Tools;
+import com.neusoft.ehrss.liaoning.utils.HttpClientTools;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,13 +68,22 @@ public class SmsMsgController {
 	@Autowired
 	private PersonExpertRepository personExpertRepository;
 
+	@Value("${saber.auth.zwfw.app.url}")
+	private String zwfwAppUrl;
+	@Value("${saber.http.proxy.host}")
+	private String host = "";
+
+
+	@Value("${saber.http.proxy.port}")
+	private String port = "";
+
 	// @Autowired
 	// private ResetPasswordTokenService resetPasswordTokenService;
 
 	/**
 	 * 短信验证码发送
 	 * 
-	 * @param smsMsgDTO
+	 * @param
 	 * @return
 	 */
 	@ApiOperation(value = "POST根据手机号发送短信验证码-手机端", tags = "手机验证码操作接口", notes = "该请求不需要身份证信息。")
@@ -86,6 +101,27 @@ public class SmsMsgController {
 			throw new MessageException("请求有误");
 		}
 	}
+
+	@ApiOperation(value = "POST根据手机号发送短信验证码-手机端", tags = "手机验证码操作接口", notes = "该请求不需要身份证信息。")
+	@PostMapping("/captcha/sm/sendbyidNumber")
+	@ResponseStatus(HttpStatus.CREATED)
+	public void sendSmsCaptchaMobile( @PathVariable("idNumber") String idNumber) {
+       String checkRequest="";
+       String mobile="";
+		try {
+			 checkRequest = DemoDesUtil.encrypt("{\"score\":\"1\",\"cardcode\":\"" + idNumber + "\",\"method\":\"sendphone\",\"service\":\"wechat\",\"version\":\"1.0.0\",\"key\":\"E2A243476964ABAF584C7DFA76A6F949\",\"token\":\"00000000000000000000000000000000\"}",DemoDesUtil.getDtKey());
+			 String msg = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, checkRequest,host,port), DemoDesUtil.getDtKey())).get("result").toString();
+			 mobile= Des3Tools.decode(msg);
+		} catch (Exception e) {
+			throw new BadCredentialsException("加解密错误");
+		}
+			msgService.nextCaptchaPersonSms(mobile, mobile, BusinessType.Default, ClientType.Mobile, "GRWSBS1", "20000");
+
+	}
+
+
+
+
 
 	@ApiOperation(value = "POST根据手机号发送短信验证码-一体机", tags = "手机验证码操作接口", notes = "该请求需要客户端授权")
 	@PostMapping("/atm/captcha/{mobilenumber}")
@@ -108,7 +144,7 @@ public class SmsMsgController {
 	/**
 	 * 根据姓名、证件号 获取接受短信验证码的手机号
 	 * 
-	 * @param mobilenumber
+	 * @param
 	 */
 	@ApiOperation(value = "POST根据账号 获取接受短信验证码的手机号", tags = "手机验证码操作接口", notes = "根据账号 获取接受短信验证码的手机号")
 	@RequestMapping(value = "/captcha/sm/idnumbername", method = RequestMethod.POST)

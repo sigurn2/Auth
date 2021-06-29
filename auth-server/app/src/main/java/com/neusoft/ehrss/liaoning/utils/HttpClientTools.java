@@ -20,9 +20,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -316,10 +318,7 @@ public class HttpClientTools {
 		return "";
 	}
 
-	public static void main(String[] args) {
-		// TODO 测试代码
-		System.out.println(Boolean.getBoolean("true"));
-	}
+
 
 	public static String httpPostToLc(String url, JSONObject params, String appKey, boolean isGS) {
 		// post请求返回结果
@@ -416,6 +415,33 @@ public class HttpClientTools {
 		}
 		return "";
 	}
+
+	public static void main(String[] args) throws Exception {
+         String idNumber="14010719980920393X";
+
+
+
+		 String zwfwAppUrl="http://app.lnzwfw.gov.cn:8618/app/c/";
+
+		 String host = "";
+
+
+
+		 String port = "";
+
+		String checkRequest = DemoDesUtil.encrypt("{\"score\":\"1\",\"cardcode\":\"" + idNumber + "\",\"method\":\"sendphone\",\"service\":\"wechat\",\"version\":\"1.0.0\",\"key\":\"E2A243476964ABAF584C7DFA76A6F949\",\"token\":\"00000000000000000000000000000000\"}",DemoDesUtil.getDtKey());
+
+		String msg = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, checkRequest,host,port), DemoDesUtil.getDtKey())).get("result").toString();
+		String mobile=Des3Tools.decode(msg);
+
+        logger.debug("msg={}",msg);
+		logger.debug("msg={}",mobile);
+
+
+	}
+
+
+
 
 
 

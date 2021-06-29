@@ -27,6 +27,7 @@ import com.neusoft.sl.si.authserver.base.services.user.UserCustomService;
 
 import io.swagger.annotations.ApiOperation;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 
 /**
@@ -152,6 +153,32 @@ public class PassWordManageRestController {
 		userService.updatePassWord(passWordResetDetailDTO.getAccount(),passWordResetDetailDTO.getOldPassword(), passWordResetDetailDTO.getNewPassword());
 	}
 
+	/**
+	 * App忘记密码
+	 *
+	 * @param passWordResetDetailDTO
+	 */
+	@ApiOperation(value = "App忘记密码", tags = "密码操作接口", notes = "重置密码PassWordManageRestController，校验短信验证码")
+	@RequestMapping(value = "/forget", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.CREATED)
+	public void forget(@RequestBody ForgetPwdDTO passWordResetDetailDTO, HttpServletRequest request) {
+		log.debug("修改密码DTO,账户={}新密码={}",passWordResetDetailDTO.getAccount(), passWordResetDetailDTO.getNewPassword());
+
+		try {
+			forgetPwd(passWordResetDetailDTO);
+		} catch (Exception e) {
+			throw new BadCredentialsException(e.getMessage());
+		}
+		userService.forgetPassWord(passWordResetDetailDTO.getAccount(), passWordResetDetailDTO.getNewPassword());
+	}
+
+
+
+
+
+
+
+
 
 
 	@ApiOperation(value = "PUT专家用户重置密码", tags = "密码操作接口", notes = "专家用户重置密码PassWordManageRestController，校验短信验证码")
@@ -256,6 +283,31 @@ public class PassWordManageRestController {
 		else {
 			log.debug("修改密码成功！");
 		}
+	}
+
+
+	public  void  forgetPwd(ForgetPwdDTO dto) throws Exception {
+		String forgetRequest="";
+		JSONObject json= null;
+		forgetRequest = DemoDesUtil.encrypt("{\"score\":\"1\",  \"userName\":\"" + dto.getAccount() + "\",   \"mobile\":\"" + dto.getMobile() + "\",\"password\":\"" + dto.getNewPassword() + "\",     \"method\":\"resetPwd\",\"service\":\"user\",\"version\":\"1.0.0\",\"key\":\"E2A243476964ABAF584C7DFA76A6F949\",\"token\":\"00000000000000000000000000000000\"}", DemoDesUtil.getDtKey());
+
+		try {
+			 json = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, forgetRequest, host, port), DemoDesUtil.getDtKey()));
+
+		} catch (Exception e) {
+			throw new BadCredentialsException("加解密错误");
+		}
+
+		String code = json.get("code").toString();
+		String msg = json.get("msg").toString();
+		if (!"0000".equals(code)) {
+
+			throw new BadCredentialsException("重置密码失败:" + msg);
+		}
+		else {
+			log.debug("重置密码成功！");
+		}
+
 	}
 
 

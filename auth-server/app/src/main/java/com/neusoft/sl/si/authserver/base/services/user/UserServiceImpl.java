@@ -287,6 +287,26 @@ public class  UserServiceImpl implements UserService {
 		}
 	}
 
+
+	//重置密码
+	public void forgetPassWord(String account , String newPassWord) {
+		User userInfo = this.findByAccount(account);
+			// 修改密码
+			userInfo.setPassword(passwordEncoderService.encryptPassword(newPassWord));
+			LOGGER.debug("==updateUser " + userInfo + "=============");
+			List<String> key = new ArrayList<String>(Arrays.asList(keys.split(",")));
+			// 如果设置密码对称加密keys
+			if (key.size() >= 3) {
+				userInfo.setSalt(DESUtil.strEnc(newPassWord, key.get(0), key.get(1), key.get(2)));
+			}
+			this.updateUser(userInfo);
+		}
+
+
+
+
+
+
 	/*
 	 * (non-Javadoc)
 	 * 

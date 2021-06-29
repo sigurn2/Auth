@@ -2,6 +2,7 @@ package com.neusoft.sl.si.authserver.uaa.service.msg;
 
 import com.neusoft.sl.si.authserver.base.domains.user.enums.UserType;
 import com.neusoft.sl.si.authserver.uaa.controller.interfaces.message.BatchMsgDto;
+import com.neusoft.sl.si.authserver.uaa.controller.interfaces.message.ForgetMsgDTO;
 import com.neusoft.sl.si.authserver.uaa.controller.interfaces.message.MsgType;
 import com.neusoft.sl.si.authserver.uaa.controller.user.dto.SmsCaptchaDTO;
 import com.neusoft.sl.si.authserver.uaa.filter.captcha.domain.sms.SmCaptcha;
@@ -24,7 +25,7 @@ public interface MsgService {
 	/**
 	 * 创建短信验证码
 	 * 
-	 * @param smsMsgDto
+	 * @param
 	 * @return
 	 */
 	public SmCaptcha nextCaptcha(String mobilenumber, String webacc, MsgType msgType, SystemType systemType, UserType userType, BusinessType businessType, ClientType clientType, String channel, String sender);
@@ -33,5 +34,5 @@ public interface MsgService {
 	
 	public boolean validateCaptcha(String mobile, String verifycode);
 
-	public void sendMsg(BatchMsgDto dto);
+	public void sendMsg(ForgetMsgDTO dto);
 }

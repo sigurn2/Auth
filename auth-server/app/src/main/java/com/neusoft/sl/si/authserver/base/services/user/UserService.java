@@ -135,6 +135,9 @@ public interface UserService {
 	 */
 	void updatePassWord(String account, String oldPassWord, String newPassWord);
 
+
+	//App忘记密码
+	void forgetPassWord(String account, String newPassWord);
 	/**
 	 * 根据账户和角色查询用户信息
 	 * 
@@ -163,7 +166,7 @@ public interface UserService {
 	/**
 	 * 根据user的扩展信息主单位编号查询User
 	 * 
-	 * @param id
+	 * @param 
 	 * @param mainCompanyNum
 	 * @return
 	 */

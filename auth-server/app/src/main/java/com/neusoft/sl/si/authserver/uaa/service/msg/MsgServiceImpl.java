@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import com.neusoft.sl.si.authserver.uaa.controller.interfaces.message.ForgetMsgDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
@@ -55,9 +56,9 @@ public class MsgServiceImpl implements MsgService {
 	private static final String MESSAGE_SUFFIX = "，此验证码5分钟内有效，请尽快完成验证。";
 
 	@Value("${pile.message.address}")
-	private String address = "http://162.17.51.1/pile/message";
+	private String address = "http://162.17.51.1/piles/message";
 
-	private static final String SEND_URL = "/send";
+	private static final String SEND_URL = "/v1/sms";
 
 	/** 验证码仓储 */
 	@Autowired
@@ -92,23 +93,11 @@ public class MsgServiceImpl implements MsgService {
 		SmCaptcha smCaptcha = new SmCaptcha(mobilenumber, wordBean.getWord());
 		// 发送验证码
 		String message = MESSAGE_PREFIX + smCaptcha.getWord() + MESSAGE_SUFFIX;
-		BatchMsgDto dto = new BatchMsgDto();
-		dto.setBusinessType(businessType);
-		dto.setClientType(clientType);
-		dto.setMsgType(msgType);
-		dto.setSystemType(systemType);
-		dto.setUserType(userType);
-		List<MsgDto> msglst = new ArrayList<MsgDto>();
-		MsgDto msg = new MsgDto();
-		msg.setContent(message);
-		msg.setMobile(mobilenumber);
-		msg.setWebacc(webacc);
-		// 渠道编号
-		msg.setChannel(channel);
-		// 用户编号
-		msg.setSender(sender);
-		msglst.add(msg);
-		dto.setMsglst(msglst);
+
+		ForgetMsgDTO dto = new ForgetMsgDTO();
+		dto.setContent(message);
+		dto.setMobile(mobilenumber);
+
 		// 调用消息平台发送消息
 		smCaptchaSendManager.verifySendCount(mobilenumber);
 		this.sendMsg(dto);
@@ -125,23 +114,9 @@ public class MsgServiceImpl implements MsgService {
 		SmCaptcha smCaptcha = new SmCaptcha(mobilenumber, wordBean.getWord());
 		// 发送验证码
 		String message = MESSAGE_PREFIX + smCaptcha.getWord() + MESSAGE_SUFFIX;
-		BatchMsgDto dto = new BatchMsgDto();
-		dto.setBusinessType(businessType);
-		dto.setClientType(clientType);
-		dto.setMsgType(msgType);
-		dto.setSystemType(systemType);
-		dto.setUserType(userType);
-		List<MsgDto> msglst = new ArrayList<MsgDto>();
-		MsgDto msg = new MsgDto();
-		msg.setContent(message);
-		msg.setMobile(mobilenumber);
-		msg.setWebacc(webacc);
-		// 渠道编号
-		msg.setChannel(channel);
-		// 用户编号
-		msg.setSender(sender);
-		msglst.add(msg);
-		dto.setMsglst(msglst);
+		ForgetMsgDTO dto = new ForgetMsgDTO();
+		dto.setContent(message);
+		dto.setMobile(mobilenumber);
 		// 调用消息平台发送消息
 		this.sendMsg(dto);
 		return new SmsCaptchaDTO(mobilenumber, smCaptcha.getWord());
@@ -163,15 +138,10 @@ public class MsgServiceImpl implements MsgService {
 		return false;
 	}
 
-	@Override
-	public void sendMsg(BatchMsgDto dto) {
+
+	public void sendMsg(ForgetMsgDTO dto) {
 		log.debug("调用消息平台发送短信");
-		if (log.isDebugEnabled()) {
-			List<MsgDto> msgDtos = dto.getMsglst();
-			for (MsgDto msgDto : msgDtos) {
-				log.debug("{}|{}", msgDto.getContent(), msgDto.getMobile());
-			}
-		}
+
 		// 创建默认的httpClient实例.
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		// 创建httppost
