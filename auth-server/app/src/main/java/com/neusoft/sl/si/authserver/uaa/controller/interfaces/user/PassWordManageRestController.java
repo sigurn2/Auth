@@ -9,9 +9,10 @@ import com.neusoft.ehrss.liaoning.utils.DemoDesUtil;
 import com.neusoft.ehrss.liaoning.utils.HttpClientTools;
 import com.neusoft.sl.si.authserver.base.services.user.UserService;
 import com.neusoft.sl.si.authserver.uaa.controller.interfaces.user.dto.*;
+import com.neusoft.sl.si.authserver.uaa.exception.CaptchaErrorException;
+import com.neusoft.sl.si.authserver.uaa.filter.captcha.CaptchaRequestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -26,9 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.neusoft.sl.si.authserver.base.services.user.UserCustomService;
 
 import io.swagger.annotations.ApiOperation;
-
-import java.io.UnsupportedEncodingException;
-import java.util.Optional;
 
 /**
  * 密码控制器
@@ -48,6 +46,10 @@ public class PassWordManageRestController {
 	private UserCustomService userCustomService;
 	@Resource
 	private UserService userService;
+
+	@Autowired
+	private CaptchaRequestService captchaRequestService;
+
 
 	//@Autowired
 	//private ResetPasswordUserRepository resetPasswordUserRepository;
@@ -162,14 +164,21 @@ public class PassWordManageRestController {
 	@RequestMapping(value = "/forget", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public void forget(@RequestBody ForgetPwdDTO passWordResetDetailDTO, HttpServletRequest request) {
-		log.debug("修改密码DTO,账户={}新密码={}",passWordResetDetailDTO.getAccount(), passWordResetDetailDTO.getNewPassword());
+		log.debug("修改密码DTO,账户={}新密码={}",passWordResetDetailDTO.getIdNumber(), passWordResetDetailDTO.getNewPassword());
+		//身份证获取手机号
+		String mobile=idNumberGetMobile(passWordResetDetailDTO.getIdNumber());
+		// 校验短信验证码
+		String sms = captchaRequestService.smsCaptchaRequest(mobile, request);
+		if (!"".equals(sms)) {
+			throw new CaptchaErrorException(sms);
+		}
 
 		try {
-			forgetPwd(passWordResetDetailDTO);
+			idNumberforgetPwd(passWordResetDetailDTO);
 		} catch (Exception e) {
 			throw new BadCredentialsException(e.getMessage());
 		}
-		userService.forgetPassWord(passWordResetDetailDTO.getAccount(), passWordResetDetailDTO.getNewPassword());
+		userService.forgetPassWord(passWordResetDetailDTO.getIdNumber(), passWordResetDetailDTO.getNewPassword());
 	}
 
 
@@ -261,21 +270,13 @@ public class PassWordManageRestController {
 
 		String token= reljson.getString("token");
 
-
-
-
 		ZwfwUpdatePwdDTO zwfwUpdatePwdDTO = new ZwfwUpdatePwdDTO(DemoDesUtil.encPwd(dto.getOldPassword()), DemoDesUtil.encPwd(dto.getNewPassword()),token);
-//		String checkRequest = DemoDesUtil.encrypt("{\"score\":\"1\",\"password\":\"" +dto.getPassword() +"\",\"credittype\":\"10\",\"creditId\":\""+dto.getIdNumber()+"\",\"method\":\"register\",\""+dto.getIdNumber()+"\",\"username\":\""+ dto.getAccount() +"\",\"service\":\"check\",\"truename\":\""+ dto.getName() + "\",\"version\":\"1.0.0\",\"key\":\"E2A243476964ABAF584C7DFA76A6F949\",\"token\":\"00000000000000000000000000000000\"}",DemoDesUtil.getDtKey());
 		String resetRequest = DemoDesUtil.encrypt(JSONObject.toJSONString(zwfwUpdatePwdDTO), DemoDesUtil.getDtKey());
-		//log.debug("checkReuqest = {}, type = {},value  = {}",checkRequest, type,param );
 		JSONObject json = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, resetRequest, host, port), DemoDesUtil.getDtKey()));
-		//JSONObject json = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToAppNoProxy(zwfwAppUrl, resetRequest), DemoDesUtil.getDtKey()));
 
 		String code = json.get("code").toString();
 		String msg = json.get("msg").toString();
-//		String msg = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, registerRequest), DemoDesUtil.getDtKey())).get("msg").toString();
-//		JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, registerRequest), DemoDesUtil.getDtKey())).get("result").toString();
-		//if (resultDTO.getData())
+
 		if (!"0000".equals(code)) {
 
 			throw new BadCredentialsException("修改密码失败:" + msg);
@@ -286,13 +287,38 @@ public class PassWordManageRestController {
 	}
 
 
-	public  void  forgetPwd(ForgetPwdDTO dto) throws Exception {
+	public String idNumberGetMobile(String idNumber){
+		String checkRequest="";
+		String mobile="";
+		try {
+			checkRequest = DemoDesUtil.encrypt("{\"score\":\"1\",\"cardcode\":\"" + idNumber + "\",\"method\":\"sendphone\",\"service\":\"wechat\",\"version\":\"1.0.0\",\"key\":\"E2A243476964ABAF584C7DFA76A6F949\",\"token\":\"00000000000000000000000000000000\"}",DemoDesUtil.getDtKey());
+			String msg = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, checkRequest,host,port), DemoDesUtil.getDtKey())).get("result").toString();
+			mobile= com.neusoft.ehrss.liaoning.utils.Des3Tools.decode(msg);
+		} catch (Exception e) {
+			throw new BadCredentialsException("加解密错误");
+		}
+
+		return mobile;
+
+	}
+
+	public  void  idNumberforgetPwd(ForgetPwdDTO dto) throws Exception {
 		String forgetRequest="";
 		JSONObject json= null;
-		forgetRequest = DemoDesUtil.encrypt("{\"score\":\"1\",  \"userName\":\"" + dto.getAccount() + "\",   \"mobile\":\"" + dto.getMobile() + "\",\"password\":\"" + dto.getNewPassword() + "\",     \"method\":\"resetPwd\",\"service\":\"user\",\"version\":\"1.0.0\",\"key\":\"E2A243476964ABAF584C7DFA76A6F949\",\"token\":\"00000000000000000000000000000000\"}", DemoDesUtil.getDtKey());
+
+		//身份证获取手机号
+		String mobile=idNumberGetMobile(dto.getIdNumber());
+		//手机号获取账户名
+		ZwfwPhoneDTO zwfwPhoneDTO = new ZwfwPhoneDTO(mobile);
+		String resetRequest = DemoDesUtil.encrypt(JSONObject.toJSONString(zwfwPhoneDTO), DemoDesUtil.getDtKey());
+		JSONObject getAccount = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, resetRequest, host, port), DemoDesUtil.getDtKey()));
+		String account =getAccount.get("result").toString();
+
+
+		forgetRequest = DemoDesUtil.encrypt("{\"score\":\"1\",  \"userName\":\"" + account + "\",   \"mobile\":\"" + mobile + "\",\"password\":\"" + dto.getNewPassword() + "\",     \"method\":\"resetPwd\",\"service\":\"user\",\"version\":\"1.0.0\",\"key\":\"E2A243476964ABAF584C7DFA76A6F949\",\"token\":\"00000000000000000000000000000000\"}", DemoDesUtil.getDtKey());
 
 		try {
-			 json = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, forgetRequest, host, port), DemoDesUtil.getDtKey()));
+			json = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, forgetRequest, host, port), DemoDesUtil.getDtKey()));
 
 		} catch (Exception e) {
 			throw new BadCredentialsException("加解密错误");
@@ -309,6 +335,15 @@ public class PassWordManageRestController {
 		}
 
 	}
+
+
+
+
+
+
+
+
+
 
 
 

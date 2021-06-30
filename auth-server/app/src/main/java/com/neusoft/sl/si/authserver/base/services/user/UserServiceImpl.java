@@ -289,8 +289,8 @@ public class  UserServiceImpl implements UserService {
 
 
 	//重置密码
-	public void forgetPassWord(String account , String newPassWord) {
-		User userInfo = this.findByAccount(account);
+	public void forgetPassWord(String idNumber , String newPassWord) {
+		User userInfo = this.findByIdNumber(idNumber);
 			// 修改密码
 			userInfo.setPassword(passwordEncoderService.encryptPassword(newPassWord));
 			LOGGER.debug("==updateUser " + userInfo + "=============");

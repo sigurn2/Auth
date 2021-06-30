@@ -14,13 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.neusoft.sl.girder.ddd.core.exception.ResourceNotFoundException;
 import com.neusoft.sl.si.authserver.base.domains.expert.PersonExpert;
@@ -102,10 +96,10 @@ public class SmsMsgController {
 		}
 	}
 
-	@ApiOperation(value = "POST根据手机号发送短信验证码-手机端", tags = "手机验证码操作接口", notes = "该请求不需要身份证信息。")
-	@PostMapping("/captcha/sm/sendbyidNumber")
+	@ApiOperation(value = "POST根据身份证号发送短信验证码-手机端", tags = "手机验证码操作接口", notes = "该请求不需要身份证信息。")
+	@GetMapping("/captcha/sm/sendbyidNumber")
 	@ResponseStatus(HttpStatus.CREATED)
-	public void sendSmsCaptchaMobile( @PathVariable("idNumber") String idNumber) {
+	public void sendSmsCaptchaMobile( @RequestParam("idNumber") String idNumber) {
        String checkRequest="";
        String mobile="";
 		try {

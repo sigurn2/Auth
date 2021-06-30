@@ -46,7 +46,8 @@ import com.neusoft.sl.si.authserver.uaa.log.enums.SystemType;
  *
  */
 @Service
-public class MsgServiceImpl implements MsgService {
+public class
+MsgServiceImpl implements MsgService {
 	/** 日志 */
 	private static final Logger log = LoggerFactory.getLogger(MsgServiceImpl.class);
 
@@ -95,6 +96,7 @@ public class MsgServiceImpl implements MsgService {
 		String message = MESSAGE_PREFIX + smCaptcha.getWord() + MESSAGE_SUFFIX;
 
 		ForgetMsgDTO dto = new ForgetMsgDTO();
+		dto.setAppNumber("benxi-si");
 		dto.setContent(message);
 		dto.setMobile(mobilenumber);
 
@@ -115,6 +117,7 @@ public class MsgServiceImpl implements MsgService {
 		// 发送验证码
 		String message = MESSAGE_PREFIX + smCaptcha.getWord() + MESSAGE_SUFFIX;
 		ForgetMsgDTO dto = new ForgetMsgDTO();
+		dto.setAppNumber("benxi-si");
 		dto.setContent(message);
 		dto.setMobile(mobilenumber);
 		// 调用消息平台发送消息
