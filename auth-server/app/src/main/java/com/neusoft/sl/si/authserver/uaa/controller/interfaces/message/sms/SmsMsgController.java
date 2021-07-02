@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.alibaba.fastjson.JSONObject;
 import com.neusoft.ehrss.liaoning.utils.DemoDesUtil;
-import com.neusoft.ehrss.liaoning.utils.Des3Tools;
 import com.neusoft.ehrss.liaoning.utils.HttpClientTools;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -98,19 +97,20 @@ public class SmsMsgController {
 
 	@ApiOperation(value = "POST根据身份证号发送短信验证码-手机端", tags = "手机验证码操作接口", notes = "该请求不需要身份证信息。")
 	@GetMapping("/captcha/sm/sendbyidNumber")
-	@ResponseStatus(HttpStatus.CREATED)
-	public void sendSmsCaptchaMobile( @RequestParam("idNumber") String idNumber) {
-       String checkRequest="";
-       String mobile="";
+	@ResponseStatus(HttpStatus.OK)
+	public String sendSmsCaptcha(@RequestParam("idNumber") String idNumber) {
+		String checkRequest="";
+		String mobile="";
 		try {
-			 checkRequest = DemoDesUtil.encrypt("{\"score\":\"1\",\"cardcode\":\"" + idNumber + "\",\"method\":\"sendphone\",\"service\":\"wechat\",\"version\":\"1.0.0\",\"key\":\"E2A243476964ABAF584C7DFA76A6F949\",\"token\":\"00000000000000000000000000000000\"}",DemoDesUtil.getDtKey());
-			 String msg = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, checkRequest,host,port), DemoDesUtil.getDtKey())).get("result").toString();
-			 mobile= Des3Tools.decode(msg);
+			checkRequest = DemoDesUtil.encrypt("{\"score\":\"1\",\"cardcode\":\"" + idNumber + "\",\"method\":\"sendphone\",\"service\":\"wechat\",\"version\":\"1.0.0\",\"key\":\"E2A243476964ABAF584C7DFA76A6F949\",\"token\":\"00000000000000000000000000000000\"}",DemoDesUtil.getDtKey());
+			String msg = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, checkRequest,host,port), DemoDesUtil.getDtKey())).get("result").toString();
+			mobile= com.neusoft.ehrss.liaoning.utils.Des3Tools.decode(msg);
 		} catch (Exception e) {
 			throw new BadCredentialsException("加解密错误");
 		}
-			msgService.nextCaptchaPersonSms(mobile, mobile, BusinessType.Default, ClientType.Mobile, "GRWSBS1", "20000");
 
+			msgService.nextCaptchaPersonSms(mobile, mobile, BusinessType.Default, ClientType.Mobile, "GRWSBS1", "20000");
+            return mobile;
 	}
 
 
