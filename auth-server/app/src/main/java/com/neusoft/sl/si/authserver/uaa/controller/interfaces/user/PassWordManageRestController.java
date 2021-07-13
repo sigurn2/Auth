@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.neusoft.ehrss.liaoning.security.password.mobile.Des3Tools;
 import com.neusoft.ehrss.liaoning.utils.DemoDesUtil;
 import com.neusoft.ehrss.liaoning.utils.HttpClientTools;
+import com.neusoft.sl.si.authserver.base.services.password.PasswordEncoderService;
 import com.neusoft.sl.si.authserver.base.services.user.UserService;
 import com.neusoft.sl.si.authserver.uaa.controller.interfaces.user.dto.*;
 import com.neusoft.sl.si.authserver.uaa.exception.CaptchaErrorException;
@@ -17,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,7 +52,6 @@ public class PassWordManageRestController {
 
 	@Autowired
 	private CaptchaRequestService captchaRequestService;
-
 
 	//@Autowired
 	//private ResetPasswordUserRepository resetPasswordUserRepository;
@@ -168,10 +170,10 @@ public class PassWordManageRestController {
 		//身份证获取手机号
 		String mobile=idNumberGetMobile(passWordResetDetailDTO.getIdNumber());
 		// 校验短信验证码
-		String sms = captchaRequestService.smsCaptchaRequest(mobile, request);
-		if (!"".equals(sms)) {
-			throw new CaptchaErrorException(sms);
-		}
+	String sms = captchaRequestService.smsCaptchaRequest(mobile, request);
+	if (!"".equals(sms)) {
+		throw new CaptchaErrorException(sms);
+	}
 
 		try {
 			idNumberforgetPwd(passWordResetDetailDTO);
@@ -292,8 +294,9 @@ public class PassWordManageRestController {
 		String mobile="";
 		try {
 			checkRequest = DemoDesUtil.encrypt("{\"score\":\"1\",\"cardcode\":\"" + idNumber + "\",\"method\":\"sendphone\",\"service\":\"wechat\",\"version\":\"1.0.0\",\"key\":\"E2A243476964ABAF584C7DFA76A6F949\",\"token\":\"00000000000000000000000000000000\"}",DemoDesUtil.getDtKey());
-			String msg = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, checkRequest,host,port), DemoDesUtil.getDtKey())).get("result").toString();
-			mobile= com.neusoft.ehrss.liaoning.utils.Des3Tools.decode(msg);
+
+			mobile = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, checkRequest,host,port), DemoDesUtil.getDtKey())).get("result").toString();
+
 		} catch (Exception e) {
 			throw new BadCredentialsException("加解密错误");
 		}
@@ -313,9 +316,8 @@ public class PassWordManageRestController {
 		String resetRequest = DemoDesUtil.encrypt(JSONObject.toJSONString(zwfwPhoneDTO), DemoDesUtil.getDtKey());
 		JSONObject getAccount = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, resetRequest, host, port), DemoDesUtil.getDtKey()));
 		String account =getAccount.get("result").toString();
-
-
-		forgetRequest = DemoDesUtil.encrypt("{\"score\":\"1\",  \"userName\":\"" + account + "\",   \"mobile\":\"" + mobile + "\",\"password\":\"" + dto.getNewPassword() + "\",     \"method\":\"resetPwd\",\"service\":\"user\",\"version\":\"1.0.0\",\"key\":\"E2A243476964ABAF584C7DFA76A6F949\",\"token\":\"00000000000000000000000000000000\"}", DemoDesUtil.getDtKey());
+		String password = DigestUtils.md5DigestAsHex(dto.getNewPassword().getBytes());
+		forgetRequest = DemoDesUtil.encrypt("{\"score\":\"1\",  \"userName\":\"" + account + "\",   \"mobile\":\"" + mobile + "\",\"password\":\"" + password + "\",     \"method\":\"resetPwd\",\"service\":\"user\",\"version\":\"1.0.0\",\"key\":\"E2A243476964ABAF584C7DFA76A6F949\",\"token\":\"00000000000000000000000000000000\"}", DemoDesUtil.getDtKey());
 
 		try {
 			json = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, forgetRequest, host, port), DemoDesUtil.getDtKey()));
