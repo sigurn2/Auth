@@ -1,0 +1,121 @@
+<div style="background:#f6f6f6;">
+    <div class="P_L_cen_right" style="margin-top:-60px;margin-right:180px">
+        <div class="P_L_ceb_R01 hand"><a href="#/personlogin" class="P_L_ceb_R01 hand">登 录</a></div>
+        <div class="P_L_ceb_R02 hand"><a href="#/personPassword" class="P_L_ceb_R02 hand">重置密码</a></div>
+    </div>
+    <div class="P_L_twobg">
+        <form name="registerForm" id="registerForm">
+            <div class="P_L_register" style="height:auto">
+                <div class="P_L_T_input">
+                    <div class="P_L_I_left"><span>*</span>注册人姓名：</div>
+                    <div class="P_L_I_Cen01">
+                        <input class="P_L_I_input" autofocus class="L_I_input" id="name"
+                               ng-model="tjPersonUserDTO.name" name="name" type="text" required>
+                    </div>
+                    <div class="P_L_I_Right">
+                        <div ng-class="{true: 'P_L_zc_tr', false: 'P_L_zc_ts'}[registerForm.name.$dirty && registerForm.name.$invalid]"
+                             style="line-height:34px">请填写注册人姓名。
+                        </div>
+                    </div>
+                </div>
+                <div class="P_L_T_input">
+                    <div class="P_L_I_left"><span>*</span>证件号码：</div>
+                    <div class="P_L_I_Cen01">
+                        <input class="P_L_I_input" id="idNumber" data-ng-pattern="/(^\d{18}$)|(^\d{17}(\d|X|x)$)/"
+                               ng-model="tjPersonUserDTO.idNumber" ng-blur="checkCardNum();" name="idNumber"
+                               type="text" required/>
+                    </div>
+                    <div class="P_L_I_Right">
+                        <div ng-class="{true: 'P_L_zc_tr', false: 'P_L_zc_ts'}[registerForm.idNumber.$dirty && registerForm.idNumber.$invalid]"
+                             style="line-height:34px">请输入18位有效证件号码。
+                        </div>
+                    </div>
+                </div>
+                <div class="P_L_T_input">
+                    <div class="P_L_I_left"><span>*</span>图形验证码：</div>
+                    <div class="P_L_I_Cen03">
+                        <input type="hidden" id="captchaId" name="captchaId"
+                               value="{{captcha.captchaId}}"/> <input type="text" style="width: 220px;"
+                                                                      id="captchaWord" name="captchaWord"
+                                                                      class="P_L_t_input"
+                                                                      data-ng-model="captcha.captchaWord"
+                                                                      required
+                                                                      placeholder="点击图片更换验证码"
+                                                                      style="width: 90px"/>
+                    </div>
+                    <div class="L_t_Code">
+                        <span> <img style="margin-left:70%" id="captchaImage" ng-src="{{captchaUrl}}"
+                                    data-ng-click="getCaptcha()" width="80" height="30" alt="验证码"></span>
+                    </div>
+                </div>
+                <div class="P_L_T_input">
+                    <div class="P_L_I_left"><span>*</span>手机号码：</div>
+                    <div class="P_L_I_Cen02">
+                        <input class="P_L_I_input" name="mobilenumber" id="MobileNumber"
+                               onkeyup="value=value.replace(/[^\d]/g,'')"
+                               data-ng-model="MobileInfo.mobilenumber" required data-ng-maxlength="11"
+                               data-ng-minlength="11" type="text"/>
+                    </div>
+                    <div class="P_L_I_Right">
+                        <div ng-class="{true: 'P_L_zc_tr', false: 'P_L_zc_ts'}[registerForm.mobilenumber.$dirty &&registerForm.mobilenumber.$invalid]"
+                             style="line-height:36px">手机号码为必输项且应为11位数字。
+                        </div>
+                    </div>
+                </div>
+                <div class="P_L_T_input">
+                    <div class="P_L_I_left"><span>*</span>手机验证码：</div>
+                    <div class="P_L_I_Cen">
+                        <input class="P_L_I_input2" name="validateMobileNumber"
+                               data-ng-model="MobileInfo.captcha" required type="text"/>
+
+                        <div class="P_L_I_buttom">
+                            <input id="btnPSendCode" value="发送验证码" data-ng-click="passwordCtrlMessage()"
+                                   ng-disabled="registerForm.mobilenumber.$invalid"
+                                   class="P_L_I_Green hand"/>
+                        </div>
+                    </div>
+
+                    <div class="P_L_I_Right">
+                        <div ng-class="{true: 'P_L_zc_tr', false: 'P_L_zc_ts'}[registerForm.validateMobileNumber.$dirty && registerForm.validateMobileNumber.$invalid]"
+                             style="line-height:36px">请输入您接收到的验证码。
+                        </div>
+                    </div>
+
+                </div>
+                <div class="P_L_T_input">
+                    <div class="P_L_I_left"><span>*</span>设置密码：</div>
+                    <div class="P_L_I_Cen03">
+                        <input class="P_L_I_input" name="password" id="registerInputPassword"
+                               type="password" ng-model="tjPersonUserDTO.password"
+                               data-ng-minlength="6" required/>
+                    </div>
+                    <div class="P_L_I_Right">
+                        <div ng-class="{true: 'P_L_zc_tr', false: 'P_L_zc_ts'}[registerForm.password.$dirty && registerForm.password.$invalid]"
+                             style="line-height:34px">
+                            请设置密码，8位及以上包含数字和字母。
+                        </div>
+                    </div>
+                </div>
+                <div class="P_L_T_input">
+                    <div class="P_L_I_left"><span>*</span>重复密码：</div>
+                    <div class="P_L_I_Cen03">
+                        <input class="P_L_I_input" name="confirmpassword"
+                               girder-valid-password="tjPersonUserDTO.password"
+                               ng-model="confirmPassword" type="password" required>
+                    </div>
+                    <div class="P_L_I_Right">
+                        <div id="confirmPassword" class="P_L_zc_ts"
+                             ng-class="{true: 'P_L_zc_tr'}[registerForm.confirmpassword.$dirty&&(registerForm.confirmpassword.$error._required||registerForm.confirmpassword.$error.notEqual)]">
+                            请再次输入新密码，进行密码确认；请确保两次输入的密码一致。
+                        </div>
+                    </div>
+                </div>
+                <div class="P_L_t_text_color2 hand" style="margin: 20px auto;" data-ng-click="registeredUser()">注册
+                </div>
+            </div>
+            <!--<div style="width: 100%;text-align: center;color: red;padding: 10px;">如果您的密码和密保都忘记，请联系朝阳市12333进行人工处理</div>-->
+
+        </form>
+    </div>
+</div>
+

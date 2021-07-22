@@ -9,7 +9,7 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * @program: liaoning-auth
- * @description: 本溪密码serviceImpl
+ * @description: 哈尔滨密码serviceImpl
  * @author: lgy
  * @create: 2020-06-19 18:23
  **/

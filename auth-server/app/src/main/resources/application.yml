@@ -69,7 +69,6 @@ spring:
         strategy: org.hibernate.cfg.DefaultNamingStrategy
     database: oracle
 
-    
 yardman:
   flagWsTure: false
   ticket: "001"

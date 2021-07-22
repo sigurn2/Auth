@@ -76,7 +76,7 @@ public class CompanySiService {
         //目前只有就业后续社保ws
         AB01DTO request = new AB01DTO(orgCode);
 
-        //   此处省略的代码原因是 ： 本溪打包办不查询就业信息
+        //   此处省略的代码原因是 ： 哈尔滨打包办不查询就业信息
 
 //        if (flagla){
 //            try {

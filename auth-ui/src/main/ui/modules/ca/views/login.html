@@ -1,0 +1,70 @@
+<div class="L_bag" id="caview" ng-init="loginButton = '数据加载中。。。';initLogin()">
+    <div class="L_three_enterprise">
+        <div class="L_t_left"></div>
+        <div class="L_t_right">
+            <form class="form-horizontal" style="margin: 0 15px;" method="post" id="loginForm" name="loginForm"
+                  ng-submit="loginSystem(loginForm)">
+
+                <div class="L_o_text">欢迎登录</div>
+                <div class="fg" style="height:10px;"></div>
+                <div class="L_t_text">
+                    <div class="L_T_admin">选择证书：</div>
+                    <div class="L_T_adright">
+                        <select id="selectcert" class="L_t_input"
+                                ng-options="x.certcn for x in credentials.certsOptions track by x.certid"
+                                data-ng-model="credentials.selectedOption" required>
+                        </select>
+                    </div>
+                </div>
+                <div class="L_t_text">
+                    <div class="L_T_admin">证书密码：</div>
+                    <div class="L_T_adright">
+                        <input class="L_t_input" name="password" type="password" id="inputPassword"
+                               data-ng-model="credentials.password" required/>
+                    </div>
+                </div>
+                <div class="fg" style="height:20px;"></div>
+                <button type="submit" class="L_t_text_color hand" style="margin-left: 11%" ng-disabled="isSubmit">
+                    {{loginButton}}
+                </button>
+            </form>
+            <div style=" float: right;margin-right:10%; margin-top: 17px; background: #f0f0f0 ">
+                <a href="/download/GXCA.zip">广西CA驱动下载</a>
+            </div>
+            <div style=" float: left;margin-left: 10%; margin-top: 17px; background: #f0f0f0 ">
+                <a href="/download/DFCA.rar">东方CA驱动下载</a>
+            </div>
+            <div style=" float: left;margin-left: 10%; margin-top: 17px; background: #f0f0f0 ">
+                <a href="/download/OperationInstruction.rar">用户手册下载</a>
+            </div>
+            <div style=" float: right;margin-right:10%; margin-top: 17px; background: #f0f0f0 ">
+                <a href="/download/CAApplication.rar">申请表格下载</a>
+            </div>
+            <div style=" float: left;margin-left: 10%; margin-top: 17px; background: #f0f0f0 ">
+                <a href="javascript:alert('暂无文件');">通知文件下载</a>
+            </div>
+            <div style=" float: right;margin-right:10%; margin-top: 17px; background: #f0f0f0 ">
+                <a href="/download/QQGroup.rar">交流群QQ号</a>
+            </div>
+            <div style=" float: left;margin-left: 10%; margin-top: 17px; background: #f0f0f0 ">
+                <a href="/download/BusinessInstruction.rar">（重要）单位网报业务须知</a>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<div class="L_twofg" style=" border-bottom:#d4d4d4 1px solid;height:10px"></div>
+<div class="P_L_twofg">
+    <div class="P_L_twoleft" style="width:auto">
+        建议使用Google Chrome 浏览器（Chrome 49.0及以上版本）、360浏览器（极速模式）访问系统。
+        <a target="_blank" style="color:red ">Chrome 64位浏览器下载 <a style="bold"
+                                                                 href="http://dl.google.com/chrome/install/ChromeStandaloneSetup64.exe">点击下载；</a>
+            <a target="_blank" style="color:red">Chrome 32位浏览器下载<a style="bold"
+                                                                   href="http://dl.google.com/chrome/install/ChromeStandaloneSetup.exe">点击下载；</a>
+                    <a target="_blank" style="color:red">360浏览器 <a style="bold"
+                                                                   href="https://browser.360.cn/ee/">点击下载；</a>
+
+                        <div>版权所有：南宁市人力资源和社会保障局</div>
+    </div>
+</div>

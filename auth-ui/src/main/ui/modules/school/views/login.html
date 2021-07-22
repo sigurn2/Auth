@@ -1,0 +1,60 @@
+<div class="L_bag">
+    <div class="L_three_siagent">
+        <div class="L_t_left"></div>
+        <div class="L_t_right">
+            <form name="loginForm" id="loginForm" ng-submit="loginSystem(loginForm)">
+                <div class="L_o_text">欢迎登录</div>
+                <div class="fg" style="height:20px;"></div>
+                <div class="L_t_text">
+                    <div class="L_T_admin">用户名：</div>
+                    <div class="L_T_adright">
+                        <input class="L_t_input" name="username" id="username" autofocus data-ng-model="credentials.username" required type="text"/>
+                    </div>
+                </div>
+                <div class="L_t_text">
+                    <div class="L_T_admin">密  码：</div>
+                    <div class="L_T_adright">
+                        <input class="L_t_input" name="password" type="password" id="inputPassword"
+                               data-ng-model="credentials.password" required/>
+                    </div>
+                </div>
+                <div class="L_t_text">
+                    <div class="L_T_admin">验证码：</div>
+                    <div class="L_T_adright2">
+                        <input type="hidden" id="captchaId" name="captchaId" value="{{credentials.captchaId}}"/>
+                        <input type="text" id="captchaWord" name="captchaWord"
+                               class="L_t_input"
+                               data-ng-model="credentials.captchaWord"
+                               data-ng-minlength="4" data-ng-maxlength="4"
+                               required placeholder="点击图片更换验证码" style="width:90px" />
+                    </div>
+                    <div class="L_t_Code">
+                        <span> <img id="captchaImage" ng-src="{{captchaUrl}}" data-ng-click="getCaptcha()" width="80" height="35" alt="验证码"></span>
+                    </div>
+                </div>
+
+                <div class="fg" style="height:20px;"></div>
+                <button type="submit" class="L_t_text_color hand" style="margin-left: 15%" >登 录 系 统</button>
+                <!--<div class="fg" style="height:10px;"></div>-->
+                <!--<button type="button" class="L_t_text_color hand" style="margin-left: 15%" data-ng-click="checkSignerX('https://222.185.254.77/wsbs/j_unieap_security_check.do')">单位证书用户登录</button>-->
+            </form>
+        </div>
+    </div>
+
+</div>
+<div class="L_twofg" style=" border-bottom:#d4d4d4 1px solid;height:10px"></div>
+<div class="P_L_twofg">
+    <div class="P_L_twoleft" style="width:auto">
+        建议使用Google Chrome 浏览器（Chrome 49.0及以上版本）、Internet Explorer 浏览器（IE 11稳定版本）、搜狗浏览器（急速模式）、360浏览器（极速模式）访问系统。
+        <span style="color:red">Chrome 49.0及以上版本 <a style="bold"
+                                                    href="https://www.google.cn/intl/zh-CN/chrome/">点击下载；</a>
+              <span style="color:red">IE11浏览器 <a style="bold"
+                                                 href="https://www.microsoft.com/zh-cn/windows/">点击下载；</a>
+                  <span style="color:red">搜狗浏览器 <a style="bold"
+                                                   href="https://ie.sogou.com//">点击下载；</a>
+                               <span style="color:red">360浏览器 <a style="bold"
+                                                                 href="https://browser.360.cn/ee/">点击下载；</a>
+
+        <div>版权所有：南宁市人力资源和社会保障局</div>
+    </div>
+</div>

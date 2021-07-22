@@ -1,0 +1,147 @@
+<!--<div style="background: #f6f6f6;">-->
+	<!--&lt;!&ndash;head&ndash;&gt;-->
+	<!--<div class="P_L_top" style="height: 25px">-->
+		<!--<div class="P_L_center">-->
+			<!--<div class="P_L_cen_right" style="margin-top: 0px;">-->
+				<!--<div class="P_L_ceb_R01 hand">-->
+					<!--<a href="#/siagentLogin" class="P_L_ceb_R01 hand">登 录</a>-->
+				<!--</div>-->
+				<!--<div class="P_L_ceb_R02 hand">-->
+					<!--<a href="#/siagentActive" class="P_L_ceb_R02 hand">激 活</a>-->
+				<!--</div>-->
+			<!--</div>-->
+		<!--</div>-->
+	<!--</div>-->
+	<!--&lt;!&ndash;body&ndash;&gt;-->
+	<!--<div class="P_L_twobg" style="height: 500px">-->
+		<!--<form name="activeForm" id="activeForm">-->
+			<!--<div class="P_L_register" style="height: 550px">-->
+				<!--<div class="P_L_T_input">-->
+					<!--<div class="P_L_I_left">-->
+						<!--<span>*</span>用户名：-->
+					<!--</div>-->
+					<!--<div class="P_L_I_Cen01">-->
+						<!--<input class="P_L_I_input" autofocus id="name"-->
+							<!--ng-model="protectDTO.companyNumber" name="companyNumber"-->
+							<!--type="text" required>-->
+					<!--</div>-->
+					<!--<div class="P_L_I_Right">-->
+						<!--<div-->
+							<!--ng-class="{true: 'P_L_zc_tr', false: 'P_L_zc_ts'}[activeForm.companyNumber.$dirty && activeForm.companyNumber.$invalid]"-->
+							<!--style="line-height: 36px">请填写需要激活的单位编号</div>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="P_L_T_input">-->
+					<!--<div class="P_L_I_left">-->
+						<!--<span>*</span>生&nbsp&nbsp&nbsp&nbsp日：-->
+					<!--</div>-->
+					<!--<div class="P_L_I_Cen01">-->
+						<!--<input class="P_L_I_input" id="birth" ng-model="protectDTO.birth"-->
+							<!--name="birth" type="text" />-->
+					<!--</div>-->
+					<!--<div class="P_L_I_Right">-->
+						<!--<div-->
+							<!--ng-class="{true: 'P_L_zc_tr', false: 'P_L_zc_ts'}[activeForm.birth.$dirty && activeForm.birth.$invalid]"-->
+							<!--style="line-height: 36px">请输入该密保问题的答案</div>-->
+					<!--</div>-->
+				<!--</div>-->
+
+				<!--<div class="P_L_T_input">-->
+					<!--<div class="P_L_I_left">-->
+						<!--<span>*</span>法人代表：-->
+					<!--</div>-->
+					<!--<div class="P_L_I_Cen01">-->
+						<!--<input class="P_L_I_input" id="legal" ng-model="protectDTO.legal"-->
+							<!--name="legal" type="text" required />-->
+					<!--</div>-->
+					<!--<div class="P_L_I_Right">-->
+						<!--<div-->
+							<!--ng-class="{true: 'P_L_zc_tr', false: 'P_L_zc_ts'}[activeForm.legal.$dirty && activeForm.legal.$invalid]"-->
+							<!--style="line-height: 36px">请输入该密保问题的答案</div>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="P_L_T_input">-->
+					<!--<div class="P_L_I_left">-->
+						<!--<span>*</span>母亲姓名：-->
+					<!--</div>-->
+					<!--<div class="P_L_I_Cen01">-->
+						<!--<input class="P_L_I_input" id="motherName"-->
+							<!--ng-model="protectDTO.motherName" name="motherName" type="text"-->
+							<!--required />-->
+					<!--</div>-->
+					<!--<div class="P_L_I_Right">-->
+						<!--<div-->
+							<!--ng-class="{true: 'P_L_zc_tr', false: 'P_L_zc_ts'}[activeForm.motherName.$dirty && activeForm.motherName.$invalid]"-->
+							<!--style="line-height: 36px">请输入该密保问题的答案</div>-->
+					<!--</div>-->
+				<!--</div>-->
+
+				<!--<div class="P_L_T_input" ng-show="false">-->
+					<!--<div class="P_L_I_left">-->
+						<!--<span>*</span>初始密码：-->
+					<!--</div>-->
+					<!--<div class="P_L_I_Cen03">-->
+						<!--<input class="P_L_I_input" name="oldPwd" id="oldPwd"-->
+							<!--type="password" ng-model="protectDTO.oldPwd" required >-->
+					<!--</div>-->
+					<!--<div class="P_L_I_Right">-->
+						<!--<div-->
+							<!--ng-class="{true: 'P_L_zc_tr', false: 'P_L_zc_ts'}[activeForm.oldPwd.$dirty && activeForm.oldPwd.$invalid]"-->
+							<!--style="line-height: 36px">请输入初始化密码</div>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="P_L_T_input">-->
+					<!--<div class="P_L_I_left">-->
+						<!--<span>*</span>设置密码：-->
+					<!--</div>-->
+					<!--<div class="P_L_I_Cen03">-->
+						<!--<input class="P_L_I_input" name="newPwd"-->
+							<!--ng-model="protectDTO.newPwd" type="password" data-ng-minlength="6" required>-->
+					<!--</div>-->
+					<!--<div class="P_L_I_Right">-->
+						<!--<div id="confirmPassword"-->
+							<!--ng-class="{true: 'P_L_zc_tr', false: 'P_L_zc_ts'}[activeForm.newPwd.$dirty&&activeForm.newPwd.$invalid]">-->
+							<!--请设置新的密码，用于单位激活后登录网厅系统。不少于6位</div>-->
+					<!--</div>-->
+				<!--</div>-->
+
+				<!--<div class="P_L_T_input">-->
+					<!--<div class="P_L_I_left">-->
+						<!--<span>*</span>重复密码：-->
+					<!--</div>-->
+					<!--<div class="P_L_I_Cen03">-->
+						<!--<input class="P_L_I_input" ng-model="confirmPassword"-->
+							<!--name="confirmpassword" type="password"-->
+							<!--girder-valid-password="protectDTO.newPwd"-->
+							<!--required>-->
+					<!--</div>-->
+					<!--<div class="P_L_I_Right">-->
+						<!--<div id="confirmPwd"-->
+							<!--ng-class="{true: 'P_L_zc_tr', false: 'P_L_zc_ts'}[activeForm.confirmpassword.$dirty&&(activeForm.confirmpassword.$error._required||activeForm.confirmpassword.$error.notEqual)]">请再次输入新密码，进行密码确认；请确保两次输入的密码一致。</div>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="P_L_T_input">-->
+					<!--<div class="P_L_I_left">-->
+						<!--<span>*</span>验证码：-->
+					<!--</div>-->
+					<!--<div class="P_L_I_Cen03">-->
+						<!--<input type="hidden" id="captchaId" name="captchaId"-->
+							<!--value="{{captcha.captchaId}}" /> <input type="text"-->
+							<!--style="width: 150px;" id="captchaWord" name="captchaWord"-->
+							<!--class="P_L_t_input" data-ng-model="captcha.captchaWord"-->
+							<!--data-ng-minlength="4" required placeholder="点击图片更换验证码"-->
+							<!--style="width: 90px" />-->
+					<!--</div>-->
+					<!--<div class="L_t_Code">-->
+						<!--<span> <img style="margin-left: 70%" id="captchaImage"-->
+							<!--ng-src="{{captchaUrl}}" data-ng-click="getCaptcha()" width="80"-->
+							<!--height="30" alt="验证码"></span>-->
+					<!--</div>-->
+				<!--</div>-->
+				<!--<div class="P_L_t_text_color2 hand" style="margin-top: 5%;"-->
+					<!--data-ng-click="userActive()">单&nbsp;&nbsp;位&nbsp;&nbsp;激&nbsp;&nbsp;活</div>-->
+			<!--</div>-->
+		<!--</form>-->
+	<!--</div>-->
+<!--</div>-->
+

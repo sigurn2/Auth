@@ -430,19 +430,18 @@ public class HttpClientTools {
 
 		 String port = "";
 
-	//	String checkRequest = DemoDesUtil.encrypt("{\"score\":\"1\",\"cardcode\":\"" + idNumber + "\",\"method\":\"sendphone\",\"service\":\"wechat\",\"version\":\"1.0.0\",\"key\":\"E2A243476964ABAF584C7DFA76A6F949\",\"token\":\"00000000000000000000000000000000\"}",DemoDesUtil.getDtKey());
+        String checkRequest = DemoDesUtil.encrypt("{\"score\":\"1\",\"cardcode\":\"" + idNumber + "\",\"method\":\"sendphone\",\"service\":\"wechat\",\"version\":\"1.0.0\",\"key\":\"E2A243476964ABAF584C7DFA76A6F949\",\"token\":\"00000000000000000000000000000000\"}",DemoDesUtil.getDtKey());
+
+		String mobile= Des3Tools.decode(JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, checkRequest,host,port), DemoDesUtil.getDtKey())).get("result").toString());
+
+	//	ZwfwPhoneDTO zwfwPhoneDTO = new ZwfwPhoneDTO("13188518353");
+	//	String resetRequest = DemoDesUtil.encrypt(JSONObject.toJSONString(zwfwPhoneDTO), DemoDesUtil.getDtKey());
 //
-	//	String msg = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, checkRequest,host,port), DemoDesUtil.getDtKey())).get("result").toString();
+	//	logger.debug("msg1={}",JSONObject.toJSONString(zwfwPhoneDTO));
+	//	JSONObject json1 = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, resetRequest, host, port), DemoDesUtil.getDtKey()));
 
-		ZwfwPhoneDTO zwfwPhoneDTO = new ZwfwPhoneDTO("13188518353");
-		String resetRequest = DemoDesUtil.encrypt(JSONObject.toJSONString(zwfwPhoneDTO), DemoDesUtil.getDtKey());
-
-		logger.debug("msg1={}",JSONObject.toJSONString(zwfwPhoneDTO));
-		JSONObject json1 = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, resetRequest, host, port), DemoDesUtil.getDtKey()));
-
-	//	String mobile=Des3Tools.decode(msg);
-		String account =json1.get("result").toString();
-        logger.debug("msg={}",account);
+	//	String account =json1.get("result").toString();
+        logger.debug("msg={}",mobile);
 //		logger.debug("msg={}",mobile);
 
 

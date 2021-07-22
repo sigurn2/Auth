@@ -1,0 +1,75 @@
+<div class="L_bag">
+    <div class="L_three">
+        <!--<div class="L_t_left"></div>-->
+        <div class="L_t_right">
+            <form ng-submit="loginSystem(loginForm)" name="loginForm" id="loginForm">
+                <div class="L_o_text">个人网厅账号登录</div>
+                <div class="L_t_text">
+                    <!--<div class="L_T_admin">用户名：</div>-->
+                    <div class="L_T_adright">
+                        <input class="L_t_input" name="username" id="username" autofocus
+                               data-ng-model="personcredentials.idNum" required type="text" placeholder="证件号码"/>
+                    </div>
+                </div>
+                <div class="L_t_text">
+                    <!--<div class="L_T_admin">密  码：</div>-->
+                    <div class="L_T_adright">
+                        <input class="L_t_input" name="password" type="password" id="inputPassword"
+                               data-ng-model="personcredentials.password" data-ng-minlength="6" required
+                               placeholder="请输入密码"/>
+                    </div>
+                </div>
+                <div class="L_t_text">
+                    <!--<div class="L_T_admin">验证码：</div>-->
+                    <div class="L_T_adright2">
+                        <input type="hidden" id="captchaId" name="captchaId" value="{{personcredentials.captchaId}}"/>
+                        <input type="text" id="captchaWord" name="captchaWord"
+                               class="L_t_input"
+                               data-ng-model="personcredentials.captchaWord"
+                               data-ng-minlength="4" data-ng-maxlength="4"
+                               required placeholder="点击图片更换验证码"/>
+                    </div>
+                    <div class="L_t_Code">
+                        <img id="captchaImage" ng-src="{{personcaptchaUrl}}" data-ng-click="persongetCaptcha()" width="84"
+                             height="40" alt="验证码">
+                    </div>
+                </div>
+                <button type="submit" class="L_t_text_color hand">登 录 系 统</button>
+                <!--<button data-ng-click="redirectZwfw()" class="L_t_text_color hand">政务网登录</button>-->
+                <div class="other_login">
+                    <div class="other_login_title">
+                        <span class="line"></span>
+                        <span class="txt">使用其他账号登录</span>
+                        <span class="line"></span>
+                    </div>
+                    <a href="http://175.174.62.1:8081/uaa/idstools/getGssionid/person" class="link_btn2" target="_self"></a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    <div class="pop_box" ng-show="popShow">
+        <a href="" class="pop_close" data-ng-click="popClose()"></a>
+        <div class="pop_head">全市参保单位及参保人：</div>
+        <div class="pop_con">
+            <p>
+                您好！为了保证养老保险数据的准确性，我中心定于2021年7月9日（本周五）至2021年7月12日（下周一）晚，对养老保险省级回流数据进行更新，在更新期间网厅及APP内的数据不稳定，可能造成查询结果不准确，如发现此类问题，请在数据更新完毕后再重新登录查询。
+                对于此次更新给您带来的不便，敬请谅解！</p>
+            <p>哈尔滨市社会保险事业管理中心        2021-7-9</p>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+<div class="footer">
+    <div class="P_L_twofg">
+        <p>建议使用Google Chrome 浏览器（Chrome 49.0及以上版本）、360浏览器（极速模式）访问系统。</p>
+        <p>主办单位：哈尔滨市人力资源和社会保障局 地址:哈尔滨市平山区水塔路22号</p>
+    </div>
+
+</div>

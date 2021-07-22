@@ -94,11 +94,11 @@ angular.module('AuthUI').run(["$log", "$rootScope", "$location", "ALLOW_ACCESS_L
     });
     $rootScope.$on('$routeChangeSuccess', function (evt, next, current) {
         console.log("请求成功：");
-        var firsttitle = '辽宁省人社网上经办大厅';
+        var firsttitle = '哈尔滨市人社网上经办大厅';
         if(next.$$route.originalPath==="/bxenterpriselogin"){
-            firsttitle="本溪市养老保障公共服务平台";
+            firsttitle="哈尔滨市养老保障公共服务平台";
         }else{
-            firsttitle="辽宁省人社网上经办大厅";
+            firsttitle="哈尔滨市人社网上经办大厅";
         };
 
         $rootScope.$watch('title',function(){ document.title = firsttitle;});
@@ -623,6 +623,10 @@ angular.module('authserver.person')
         function ($rootScope, XSRFTokenService, $scope, $location, $log,personService, CaptchaService, messageBox, $cookies, $cookieStore, girderConfig, $http) {
             //messagebox
             $scope.messageBox = messageBox;
+            $scope.popShow = true;
+            $scope.popClose = function () {
+                $scope.popShow = false
+            };
 
             /**
              * 登录
@@ -1498,19 +1502,11 @@ angular.module('authserver.enterprise')
     .controller('enterpriseCtrl', ['$rootScope', '$scope', '$location', '$log', 'CaptchaService', 'enterpriseService', 'messageBox', '$http', 'girderConfig', 'XSRFTokenService',
         function ($rootScope, $scope, $location, $log, CaptchaService, enterpriseService, messageBox, $http, girderConfig, XSRFTokenService) {
             //浮动框
-            $scope.popShow = false;
+            $scope.popShow = true;
             $scope.popClose = function () {
                 $scope.popShow = false
             };
-            var uri = window.location.href;
-            $scope.areaCode = uri.substring(uri.length - 6, uri.length);
-            if ($scope.areaCode === "219900") {
-                $scope.areaName = '虚拟单位'
-            } else {
-                $scope.areaName = '原账号密码';
-                $scope.popShow = true;
-            }
-            console.log($scope.areaName);
+
             $scope.messageBox = messageBox;
             /**
              * 登录
@@ -1542,7 +1538,6 @@ angular.module('authserver.enterprise')
                             'Content-Type': 'application/x-www-form-urlencoded',
                             'captchaWord': $scope.credentials.captchaWord,
                             'captchaId': $scope.credentials.captchaId,
-                            'areaCode': $scope.areaCode
                         }
                     }
                 ).success(function (data) {
@@ -1620,7 +1615,7 @@ angular.module('authserver.enterprise').config(['$routeProvider', function ($rou
             templateUrl: 'modules/enterprise/views/login.html',
             controller: 'enterpriseCtrl'
         })
-        .when('/bxenterpriselogin', {// 本溪
+        .when('/bxenterpriselogin', {// 哈尔滨
             //查询压缩后的路径
             templateUrl: 'modules/enterprise/views/bxlogin.html',
             controller: 'bxenterpriseCtrl'
@@ -4881,12 +4876,12 @@ angular.module('AuthUI').run(['$templateCache', function($templateCache) {
 
 
   $templateCache.put('modules/enterprise/views/bxlogin.html',
-    "<div class=\"L_bag\"> <div class=\"L_three\"> <div class=\"L_t_right\"> <form name=\"loginForm\" id=\"loginForm\" ng-submit=\"loginSystem(loginForm)\"> <div class=\"L_o_text\">账号登录</div> <div class=\"L_t_text\"> <div class=\"L_T_adright\"> <input class=\"L_t_input\" name=\"username\" id=\"username\" autofocus data-ng-model=\"credentials.username\" required type=\"text\" placeholder=\"请输入用户名\"> </div> </div> <div class=\"L_t_text\"> <div class=\"L_T_adright\"> <input class=\"L_t_input\" name=\"password\" type=\"password\" id=\"inputPassword\" data-ng-model=\"credentials.password\" data-ng-minlength=\"6\" required placeholder=\"请输入密码\"> </div> </div> <div class=\"L_t_text\"> <div class=\"L_T_adright2\"> <input type=\"hidden\" id=\"captchaId\" name=\"captchaId\" value=\"{{credentials.captchaId}}\"> <input type=\"text\" id=\"captchaWord\" name=\"captchaWord\" class=\"L_t_input\" data-ng-model=\"credentials.captchaWord\" data-ng-minlength=\"4\" data-ng-maxlength=\"4\" required placeholder=\"点击图片更换验证码\"> </div> <div class=\"L_t_Code\"> <img id=\"captchaImage\" ng-src=\"{{captchaUrl}}\" data-ng-click=\"getCaptcha()\" width=\"84\" height=\"40\" alt=\"验证码\"> </div> </div> <button type=\"submit\" class=\"L_t_text_color hand\">登 录 系 统</button> </form> </div> </div> </div> <div class=\"L_twofg\"></div>"
+    "<div class=\"L_bag\"> <div class=\"L_three\"> <div class=\"L_t_right\"> <form name=\"loginForm\" id=\"loginForm\" ng-submit=\"loginSystem(loginForm)\"> <div class=\"L_o_text\">单位网厅账号登录</div> <div class=\"L_t_text\"> <div class=\"L_T_adright\"> <input class=\"L_t_input\" name=\"username\" id=\"username\" autofocus data-ng-model=\"credentials.username\" required type=\"text\" placeholder=\"请输入用户名\"> </div> </div> <div class=\"L_t_text\"> <div class=\"L_T_adright\"> <input class=\"L_t_input\" name=\"password\" type=\"password\" id=\"inputPassword\" data-ng-model=\"credentials.password\" data-ng-minlength=\"6\" required placeholder=\"请输入密码\"> </div> </div> <div class=\"L_t_text\"> <div class=\"L_T_adright2\"> <input type=\"hidden\" id=\"captchaId\" name=\"captchaId\" value=\"{{credentials.captchaId}}\"> <input type=\"text\" id=\"captchaWord\" name=\"captchaWord\" class=\"L_t_input\" data-ng-model=\"credentials.captchaWord\" data-ng-minlength=\"4\" data-ng-maxlength=\"4\" required placeholder=\"点击图片更换验证码\"> </div> <div class=\"L_t_Code\"> <img id=\"captchaImage\" ng-src=\"{{captchaUrl}}\" data-ng-click=\"getCaptcha()\" width=\"84\" height=\"40\" alt=\"验证码\"> </div> </div> <button type=\"submit\" class=\"L_t_text_color hand\">登 录 系 统</button> </form> </div> </div> </div> <div class=\"L_twofg\"></div>"
   );
 
 
   $templateCache.put('modules/enterprise/views/login.html',
-    "<div class=\"L_bag\"> <div class=\"L_three\"> <div class=\"L_t_right\"> <form name=\"loginForm\" id=\"loginForm\" ng-submit=\"loginSystem(loginForm)\"> <div class=\"L_o_text\">账号登录（{{areaName}}）</div> <div class=\"L_t_text\"> <div class=\"L_T_adright\"> <input class=\"L_t_input\" name=\"username\" id=\"username\" autofocus data-ng-model=\"credentials.username\" required type=\"text\" placeholder=\"请输入用户名\"> </div> </div> <div class=\"L_t_text\"> <div class=\"L_T_adright\"> <input class=\"L_t_input\" name=\"password\" type=\"password\" id=\"inputPassword\" data-ng-model=\"credentials.password\" data-ng-minlength=\"6\" required placeholder=\"请输入密码\"> </div> </div> <div class=\"L_t_text\"> <div class=\"L_T_adright2\"> <input type=\"hidden\" id=\"captchaId\" name=\"captchaId\" value=\"{{credentials.captchaId}}\"> <input type=\"text\" id=\"captchaWord\" name=\"captchaWord\" class=\"L_t_input\" data-ng-model=\"credentials.captchaWord\" data-ng-minlength=\"4\" data-ng-maxlength=\"4\" required placeholder=\"点击图片更换验证码\"> </div> <div class=\"L_t_Code\"> <img id=\"captchaImage\" ng-src=\"{{captchaUrl}}\" data-ng-click=\"getCaptcha()\" width=\"84\" height=\"40\" alt=\"验证码\"> </div> </div> <button type=\"submit\" class=\"L_t_text_color hand\">登 录 系 统</button> <div class=\"other_login\"> <div class=\"other_login_title\"> <span class=\"line\"></span> <span class=\"txt\">使用其他账号登录</span> <span class=\"line\"></span> </div> <a href=\"http://175.174.62.1:8081/uaa/idstools/getGssionid/enterprise\" class=\"link_btn2\" target=\"_self\"></a> </div> </form> </div> </div> <div class=\"pop_box\" ng-show=\"popShow\"> <a href=\"\" class=\"pop_close\" data-ng-click=\"popClose()\"></a> <div class=\"pop_head\">本溪市人力资源和社会保障公共服务平台试运行</div> <div class=\"pop_con\"> <p><b>市级原账号密码登录相关说明：</b>本页面为市级原网厅账号密码登录入口，如您已在原网厅开通过账号，可使用原账号密码登录。</p> </div> </div> </div> <div class=\"L_twofg\"></div>"
+    "<div class=\"L_bag\"> <div class=\"L_three\"> <div class=\"L_t_right\"> <form name=\"loginForm\" id=\"loginForm\" ng-submit=\"loginSystem(loginForm)\"> <div class=\"L_o_text\">单位网厅账号登录</div> <div class=\"L_t_text\"> <div class=\"L_T_adright\"> <input class=\"L_t_input\" name=\"username\" id=\"username\" autofocus data-ng-model=\"credentials.username\" required type=\"text\" placeholder=\"请输入用户名\"> </div> </div> <div class=\"L_t_text\"> <div class=\"L_T_adright\"> <input class=\"L_t_input\" name=\"password\" type=\"password\" id=\"inputPassword\" data-ng-model=\"credentials.password\" data-ng-minlength=\"6\" required placeholder=\"请输入密码\"> </div> </div> <div class=\"L_t_text\"> <div class=\"L_T_adright2\"> <input type=\"hidden\" id=\"captchaId\" name=\"captchaId\" value=\"{{credentials.captchaId}}\"> <input type=\"text\" id=\"captchaWord\" name=\"captchaWord\" class=\"L_t_input\" data-ng-model=\"credentials.captchaWord\" data-ng-minlength=\"4\" data-ng-maxlength=\"4\" required placeholder=\"点击图片更换验证码\"> </div> <div class=\"L_t_Code\"> <img id=\"captchaImage\" ng-src=\"{{captchaUrl}}\" data-ng-click=\"getCaptcha()\" width=\"84\" height=\"40\" alt=\"验证码\"> </div> </div> <button type=\"submit\" class=\"L_t_text_color hand\">登 录 系 统</button> <div class=\"other_login\"> <div class=\"other_login_title\"> <span class=\"line\"></span> <span class=\"txt\">使用其他账号登录</span> <span class=\"line\"></span> </div> <a href=\"http://175.174.62.1:8081/uaa/idstools/getGssionid/enterprise\" class=\"link_btn2\" target=\"_self\"></a> </div> </form> </div> </div> <div class=\"pop_box\" ng-show=\"popShow\"> <a href=\"\" class=\"pop_close\" data-ng-click=\"popClose()\"></a> <div class=\"pop_head\">全市参保单位及参保人：</div> <div class=\"pop_con\"> <p> 您好！为了保证养老保险数据的准确性，我中心定于2021年7月9日（本周五）至2021年7月12日（下周一）晚，对养老保险省级回流数据进行更新，在更新期间网厅及APP内的数据不稳定，可能造成查询结果不准确，如发现此类问题，请在数据更新完毕后再重新登录查询。 对于此次更新给您带来的不便，敬请谅解！</p> <p>哈尔滨市社会保险事业管理中心 2021-7-9</p> </div> </div> </div> <div class=\"footer\"> <div class=\"P_L_twofg\"> <p>建议使用Google Chrome 浏览器（Chrome 49.0及以上版本）、360浏览器（极速模式）访问系统。</p> <p>主办单位：哈尔滨市人力资源和社会保障局 地址:哈尔滨市平山区水塔路22号</p> </div> </div>"
   );
 
 
@@ -4926,7 +4921,7 @@ angular.module('AuthUI').run(['$templateCache', function($templateCache) {
 
 
   $templateCache.put('modules/person/views/login.html',
-    "<div class=\"L_bag\"> <div class=\"L_three\"> <div class=\"L_t_right\"> <form ng-submit=\"loginSystem(loginForm)\" name=\"loginForm\" id=\"loginForm\"> <div class=\"L_o_text\">账号登录（个人服务）</div> <div class=\"L_t_text\"> <div class=\"L_T_adright\"> <input class=\"L_t_input\" name=\"username\" id=\"username\" autofocus data-ng-model=\"personcredentials.idNum\" required type=\"text\" placeholder=\"证件号码\"> </div> </div> <div class=\"L_t_text\"> <div class=\"L_T_adright\"> <input class=\"L_t_input\" name=\"password\" type=\"password\" id=\"inputPassword\" data-ng-model=\"personcredentials.password\" data-ng-minlength=\"6\" required placeholder=\"请输入密码\"> </div> </div> <div class=\"L_t_text\"> <div class=\"L_T_adright2\"> <input type=\"hidden\" id=\"captchaId\" name=\"captchaId\" value=\"{{personcredentials.captchaId}}\"> <input type=\"text\" id=\"captchaWord\" name=\"captchaWord\" class=\"L_t_input\" data-ng-model=\"personcredentials.captchaWord\" data-ng-minlength=\"4\" data-ng-maxlength=\"4\" required placeholder=\"点击图片更换验证码\"> </div> <div class=\"L_t_Code\"> <img id=\"captchaImage\" ng-src=\"{{personcaptchaUrl}}\" data-ng-click=\"persongetCaptcha()\" width=\"84\" height=\"40\" alt=\"验证码\"> </div> </div> <button type=\"submit\" class=\"L_t_text_color hand\">登 录 系 统</button> <div class=\"other_login\"> <div class=\"other_login_title\"> <span class=\"line\"></span> <span class=\"txt\">使用其他账号登录</span> <span class=\"line\"></span> </div> <a href=\"http://175.174.62.1:8081/uaa/idstools/getGssionid/person\" class=\"link_btn2\" target=\"_self\"></a> </div> </form> </div> </div> </div> <div class=\"L_twofg\" style=\"border-bottom:#d4d4d4 1px solid;height:10px\"></div>"
+    "<div class=\"L_bag\"> <div class=\"L_three\"> <div class=\"L_t_right\"> <form ng-submit=\"loginSystem(loginForm)\" name=\"loginForm\" id=\"loginForm\"> <div class=\"L_o_text\">个人网厅账号登录</div> <div class=\"L_t_text\"> <div class=\"L_T_adright\"> <input class=\"L_t_input\" name=\"username\" id=\"username\" autofocus data-ng-model=\"personcredentials.idNum\" required type=\"text\" placeholder=\"证件号码\"> </div> </div> <div class=\"L_t_text\"> <div class=\"L_T_adright\"> <input class=\"L_t_input\" name=\"password\" type=\"password\" id=\"inputPassword\" data-ng-model=\"personcredentials.password\" data-ng-minlength=\"6\" required placeholder=\"请输入密码\"> </div> </div> <div class=\"L_t_text\"> <div class=\"L_T_adright2\"> <input type=\"hidden\" id=\"captchaId\" name=\"captchaId\" value=\"{{personcredentials.captchaId}}\"> <input type=\"text\" id=\"captchaWord\" name=\"captchaWord\" class=\"L_t_input\" data-ng-model=\"personcredentials.captchaWord\" data-ng-minlength=\"4\" data-ng-maxlength=\"4\" required placeholder=\"点击图片更换验证码\"> </div> <div class=\"L_t_Code\"> <img id=\"captchaImage\" ng-src=\"{{personcaptchaUrl}}\" data-ng-click=\"persongetCaptcha()\" width=\"84\" height=\"40\" alt=\"验证码\"> </div> </div> <button type=\"submit\" class=\"L_t_text_color hand\">登 录 系 统</button> <div class=\"other_login\"> <div class=\"other_login_title\"> <span class=\"line\"></span> <span class=\"txt\">使用其他账号登录</span> <span class=\"line\"></span> </div> <a href=\"http://175.174.62.1:8081/uaa/idstools/getGssionid/person\" class=\"link_btn2\" target=\"_self\"></a> </div> </form> </div> </div> <div class=\"pop_box\" ng-show=\"popShow\"> <a href=\"\" class=\"pop_close\" data-ng-click=\"popClose()\"></a> <div class=\"pop_head\">全市参保单位及参保人：</div> <div class=\"pop_con\"> <p> 您好！为了保证养老保险数据的准确性，我中心定于2021年7月9日（本周五）至2021年7月12日（下周一）晚，对养老保险省级回流数据进行更新，在更新期间网厅及APP内的数据不稳定，可能造成查询结果不准确，如发现此类问题，请在数据更新完毕后再重新登录查询。 对于此次更新给您带来的不便，敬请谅解！</p> <p>哈尔滨市社会保险事业管理中心 2021-7-9</p> </div> </div> </div> <div class=\"footer\"> <div class=\"P_L_twofg\"> <p>建议使用Google Chrome 浏览器（Chrome 49.0及以上版本）、360浏览器（极速模式）访问系统。</p> <p>主办单位：哈尔滨市人力资源和社会保障局 地址:哈尔滨市平山区水塔路22号</p> </div> </div>"
   );
 
 

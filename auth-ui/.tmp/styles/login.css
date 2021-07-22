@@ -139,7 +139,8 @@ a:hover {
 
 .L_bag {
     width: 100%;
-    background: linear-gradient(to right, #3467ce, #5389f4);
+    background: #fff url("../images/bg_new.png") no-repeat center top;
+    /*background: linear-gradient(to right, #3467ce, #5389f4);*/
     height: 470px;
 }
 
@@ -175,8 +176,6 @@ a:hover {
     width: 1200px;
     height: 470px;
     margin: 0 auto;
-    background: url(../images/L_02.jpg) no-repeat left center;
-    background-size: contain;
 }
 
 .L_three_enterprise {
@@ -634,4 +633,8 @@ a:hover {
     margin-top: 25px;
     background: url(../images/Logo_school.png) no-repeat;
     float: left;
+}
+.footer{
+    width: 100%;
+    background: #4e555a;
 }
