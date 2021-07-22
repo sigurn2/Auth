@@ -1,5 +1,4 @@
 package com.neusoft.sl.si.authserver.uaa.controller.interfaces.user;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.neusoft.sl.si.authserver.base.services.user.UserCustomService;
 
 import io.swagger.annotations.ApiOperation;
-
 /**
  * 密码控制器
  *
@@ -39,7 +37,6 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/ws/password")
 public class PassWordManageRestController {
-
 	/**
 	 * 日志
 	 */
@@ -60,64 +57,8 @@ public class PassWordManageRestController {
 	@Value("${saber.http.proxy.host}")
 	private String host = "";
 
-
 	@Value("${saber.http.proxy.port}")
 	private String port = "";
-
-//	//保存企业相关信息（重置密码）
-//	@ApiOperation(value = "添加企业重置密码用户信息", tags = "密码操作接口", notes = "添加重置密码所需的校验用户的信息")
-//	@RequestMapping(value = "/insterUser", method = RequestMethod.POST)
-//	@ResponseStatus(HttpStatus.CREATED)
-//	public void insterUser(@RequestBody InsertRestPasswordUserDTO insterRestPasswordUserDTO) {
-//
-//		Optional.ofNullable(insterRestPasswordUserDTO.getCompanyId()).orElseThrow(() -> new RuntimeException("请输入单位编号"));
-//		Optional.ofNullable(insterRestPasswordUserDTO.getName()).orElseThrow(() -> new RuntimeException("请输入姓名"));
-//		Optional.ofNullable(insterRestPasswordUserDTO.getIdNumber()).orElseThrow(() -> new RuntimeException("请输入身份证号"));
-//		Optional.ofNullable(insterRestPasswordUserDTO.getExpirationDate()).orElseThrow(() -> new RuntimeException("请输入截止日期"));
-//
-//		ResetPasswordUser resetPasswordUser = new ResetPasswordUser();
-//		BeanUtils.copyProperties(insterRestPasswordUserDTO, resetPasswordUser);
-//		resetPasswordUserRepository.save(resetPasswordUser);
-//	}
-//
-//	@ApiOperation(value = "查询企业重置密码用户信息", tags = "密码操作接口", notes = "添加重置密码所需的校验用户的信息")
-//	@RequestMapping(value = "/findUser", method = RequestMethod.GET)
-//	@ResponseStatus(HttpStatus.CREATED)
-//	public ResetPasswordUser findUser(String companyId){
-//		ResetPasswordUser byCompanyId = resetPasswordUserRepository.findByCompanyId(companyId);
-//		Optional.ofNullable(byCompanyId).orElseThrow(() -> new RuntimeException("未查到您的单位劳资员信息，请维护"));
-//		return byCompanyId;
-//	}
-
-
-//	/**
-//	 * 重置密码
-//	 *
-//	 * @param passWordResetDetailDTO
-//	 */
-//	@ApiOperation(value = "重置虚拟单位密码", tags = "密码操作接口", notes = "重置密码PassWordManageRestController，校验短信验证码")
-//	@RequestMapping(value = "/enterpriseRest", method = RequestMethod.POST)
-//	@ResponseStatus(HttpStatus.CREATED)
-//	public void reset(@RequestBody EnterprisePassWordResetDetailDTO passWordResetDetailDTO, HttpServletRequest request) {
-//		Optional.ofNullable(passWordResetDetailDTO.getCompanyId()).orElseThrow(() -> new RuntimeException("请输入单位编号"));
-//		Optional.ofNullable(passWordResetDetailDTO.getName()).orElseThrow(() -> new RuntimeException("请输入姓名"));
-//		Optional.ofNullable(passWordResetDetailDTO.getIdNumber()).orElseThrow(() -> new RuntimeException("请输入身份证号"));
-//		Optional.ofNullable(passWordResetDetailDTO.getExpirationDate()).orElseThrow(() -> new RuntimeException("请输入截止日期"));
-//		Optional.ofNullable(passWordResetDetailDTO.getNewPassword()).orElseThrow(() -> new RuntimeException("请输入新密码"));
-//
-//		log.debug("重置密码修改DTO，companyid = {} idnumber={}", passWordResetDetailDTO.getCompanyId(), passWordResetDetailDTO.getIdNumber());
-//		ResetPasswordUser byCompanyId = resetPasswordUserRepository.findByCompanyId(passWordResetDetailDTO.getCompanyId());
-//		Optional.ofNullable(byCompanyId).orElseThrow(() -> new RuntimeException("未查询导用户的关联数据"));
-//
-//		if (byCompanyId.getIdNumber().equalsIgnoreCase(passWordResetDetailDTO.getIdNumber()) && byCompanyId.getName().equals(passWordResetDetailDTO.getName()) && byCompanyId.getExpirationDate().equals(passWordResetDetailDTO.getExpirationDate())){
-//			log.debug("校验信息通过，进行密码重置");
-//			userCustomService.resetEnterprisePassword(passWordResetDetailDTO, request);
-//		}else {
-//			throw new RuntimeException("信息校验不通过");
-//		}
-//
-////        userCustomService.resetPassword(passWordResetDetailDTO, request);
-//	}
 
 	/**
 	 * 重置密码
@@ -174,7 +115,6 @@ public class PassWordManageRestController {
 	if (!"".equals(sms)) {
 		throw new CaptchaErrorException(sms);
 	}
-
 		try {
 			idNumberforgetPwd(passWordResetDetailDTO);
 		} catch (Exception e) {
@@ -182,14 +122,6 @@ public class PassWordManageRestController {
 		}
 		userService.forgetPassWord(passWordResetDetailDTO.getIdNumber(), passWordResetDetailDTO.getNewPassword());
 	}
-
-
-
-
-
-
-
-
 
 
 	@ApiOperation(value = "PUT专家用户重置密码", tags = "密码操作接口", notes = "专家用户重置密码PassWordManageRestController，校验短信验证码")
@@ -294,9 +226,7 @@ public class PassWordManageRestController {
 		String mobile="";
 		try {
 			checkRequest = DemoDesUtil.encrypt("{\"score\":\"1\",\"cardcode\":\"" + idNumber + "\",\"method\":\"sendphone\",\"service\":\"wechat\",\"version\":\"1.0.0\",\"key\":\"E2A243476964ABAF584C7DFA76A6F949\",\"token\":\"00000000000000000000000000000000\"}",DemoDesUtil.getDtKey());
-
-			mobile = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, checkRequest,host,port), DemoDesUtil.getDtKey())).get("result").toString();
-
+            mobile= Des3Tools.decode(JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, checkRequest,host,port), DemoDesUtil.getDtKey())).get("result").toString());
 		} catch (Exception e) {
 			throw new BadCredentialsException("加解密错误");
 		}
