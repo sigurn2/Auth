@@ -96,6 +96,7 @@ public class SmsMsgController {
 		}
 	}
 
+    //供本溪找回密码使用
 	@ApiOperation(value = "POST根据身份证号发送短信验证码-手机端", tags = "手机验证码操作接口", notes = "该请求不需要身份证信息。")
 	@GetMapping("/captcha/sm/sendbyidNumber")
 	@ResponseStatus(HttpStatus.OK)
@@ -106,6 +107,8 @@ public class SmsMsgController {
 			checkRequest = DemoDesUtil.encrypt("{\"score\":\"1\",\"cardcode\":\"" + idNumber + "\",\"method\":\"sendphone\",\"service\":\"wechat\",\"version\":\"1.0.0\",\"key\":\"E2A243476964ABAF584C7DFA76A6F949\",\"token\":\"00000000000000000000000000000000\"}",DemoDesUtil.getDtKey());
 			String msg = JSONObject.parseObject(DemoDesUtil.decrypt(HttpClientTools.httpPostToApp(zwfwAppUrl, checkRequest,host,port), DemoDesUtil.getDtKey())).get("result").toString();
 			mobile= Des3Tools.decode(msg);
+			log.debug("msg={}",mobile);
+
 		} catch (Exception e) {
 			throw new BadCredentialsException("加解密错误");
 		}

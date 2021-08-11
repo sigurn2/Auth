@@ -78,7 +78,7 @@ public class RedisCacheConfig {
 		@SuppressWarnings("serial")
 		Map<String, Long> expires = new HashMap<String, Long>() {
 			{
-				put(CACHE_SM_CAPTCHA_REDIS_KEY, 300L); // 短信验证码 5分钟
+				put(CACHE_SM_CAPTCHA_REDIS_KEY, 60L); // 短信验证码 5分钟
 				put(CACHE_IMG_CAPTCHA_REDIS_KEY, 300L); // 图片验证码 5分钟
 				put(CACHE_USER_REDIS_KEY, 1800L); // 用户信息30分钟
 				put(CACHE_USERALLOWED_REDIS_KEY, 86400L); // 用户信息

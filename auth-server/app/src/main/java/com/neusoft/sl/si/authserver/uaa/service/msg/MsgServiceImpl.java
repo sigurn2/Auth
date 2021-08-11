@@ -3,9 +3,11 @@ package com.neusoft.sl.si.authserver.uaa.service.msg;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 
+import com.neusoft.ehrss.liaoning.security.password.idnumbername.RedisService;
 import com.neusoft.sl.si.authserver.uaa.controller.interfaces.message.ForgetMsgDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -21,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.session.SessionProperties;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -64,7 +67,8 @@ MsgServiceImpl implements MsgService {
 	/** 验证码仓储 */
 	@Autowired
 	private SmCaptchaRepository smCaptchaRepository;
-	
+	@Autowired
+	private RedisService redisService;
 	@Autowired
 	private SmCaptchaSendManager smCaptchaSendManager;
 
@@ -89,6 +93,9 @@ MsgServiceImpl implements MsgService {
 
 	@Override
 	public SmCaptcha nextCaptcha(String mobilenumber, String webacc, MsgType msgType, SystemType systemType, UserType userType, BusinessType businessType, ClientType clientType, String channel, String sender) {
+
+		smCaptchaRepository.remove(mobilenumber);
+
 		WordBean wordBean = wordFactory.getNextWord();
 		// 持久化对象
 		SmCaptcha smCaptcha = new SmCaptcha(mobilenumber, wordBean.getWord());
@@ -105,7 +112,10 @@ MsgServiceImpl implements MsgService {
 		this.sendMsg(dto);
 		smCaptchaSendManager.updateSendCount(mobilenumber);
 		// 存储验证码
-		smCaptcha = smCaptchaRepository.save(smCaptcha);
+		redisService.set("BX_SMS_"+mobilenumber,smCaptcha,1, TimeUnit.MINUTES);
+
+	//	smCaptcha = smCaptchaRepository.save(smCaptcha);
+
 		return smCaptcha;
 	}
 	
@@ -127,14 +137,14 @@ MsgServiceImpl implements MsgService {
 
 	@Override
 	public boolean validateCaptcha(String mobile, String verifycode) {
-		SmCaptcha captcha = smCaptchaRepository.getCaptcha(mobile);
+		SmCaptcha captcha = smCaptchaRepository.getCaptcha("BX_SMS_"+mobile);
 		if (null == captcha) {
 			return false;
 		} else {
 			log.debug("==存储的captchaWord为{}==", captcha.getWord());
 			if (captcha.verify(verifycode)) {
 				// 从仓储移除此验证码
-				smCaptchaRepository.remove(mobile);
+				smCaptchaRepository.remove("BX_SMS_"+mobile);
 				return true;
 			}
 		}
