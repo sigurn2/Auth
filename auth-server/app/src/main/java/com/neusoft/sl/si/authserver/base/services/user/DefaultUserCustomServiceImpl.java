@@ -183,7 +183,18 @@ public class DefaultUserCustomServiceImpl implements UserCustomService {
         User user = userRepository.findByAccount(account);
         user.setIdNumber(idNumber);
         userRepository.save(user);
+    }
 
+    public void updateEmailForZwfw(String account,String email){
+        User user = userRepository.findByAccount(account);
+        user.setEmail(email);
+        userRepository.save(user);
+    }
+
+    public void updateEmailForZwfwEnterprise(String orgcode,String email){
+        User user = userRepository.findByOrgCode(orgcode);
+        user.setEmail(email);
+        userRepository.save(user);
     }
 
     //政务网姓名和本地不一样
@@ -747,11 +758,12 @@ public class DefaultUserCustomServiceImpl implements UserCustomService {
         return newUser;
     }
 
-    public User createPersonCloudbae(String username, String idNumber, String name, String mobile, String extension) {
+    public User createPersonCloudbae(String username, String idNumber, String name, String mobile, String extension,String email) {
         LOGGER.debug("政务服务网创建用户idNumber={},name={},mobile={},username = {}", username, idNumber, name, mobile);
         PersonUserDTO userDTO = new PersonUserDTO();
         userDTO.setAccount(username);
         userDTO.setIdNumber(idNumber);
+        userDTO.setEmail(email);
         userDTO.setIdType("01");
         userDTO.setMobilenumber(mobile);
         userDTO.setName(name);

@@ -50,7 +50,7 @@ public class CloudbaeUserDetailsService implements UserDetailsService {
 			// PersonRedisUser idNumberUser = idNumberUserRedis.load(username);
 			// return new CloudbaeUserDetails(idNumberUser);
 			try {
-				User newUser = userCustomService.createPersonCloudbae(infoResponse.getIdNumber(),infoResponse.getIdNumber(), infoResponse.getName(), infoResponse.getMobile(), "cloudbae_register");
+				User newUser = userCustomService.createPersonCloudbae(infoResponse.getIdNumber(),infoResponse.getIdNumber(), infoResponse.getName(), infoResponse.getMobile(), "cloudbae_register","");
 				UserLogManager.saveRegisterLog(SystemType.Person.toString(), "Cloudbae", newUser, null);
 			} catch (Exception e) {
 				log.error("Cloudbae创建用户失败", e);

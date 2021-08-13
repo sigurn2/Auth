@@ -115,13 +115,14 @@ public class ZwfwPersonLoginProcessFilter extends AbstractAuthenticationProcessi
         String password = userDTO.getName();
         String mobile = Des3Tools.decode(userDTO.getMobile());
         String account = userDTO.getUsername();
-        log.debug("username = {}, name = {}, mobile = {}, account = {]",username,password, mobile,account);
+        String uuid = Des3Tools.decode(userDTO.getUuid());
+        log.debug("username = {}, name = {}, mobile = {}, account = {},uuid={}",username,password, mobile,account,uuid);
         //request.getSession()
       if (StringUtils.isEmpty(mobile)||StringUtils.isEmpty(username)||StringUtils.isEmpty(password)){
          throw new BadCredentialsException("查询政务网关键信息为空，无法登陆");
       }
 
-        username = username + "@@" + password + "@@" + mobile + "@@" + account;
+        username = username + "@@" + password + "@@" + mobile + "@@" + account+"@@" + uuid;
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
         setDetails(request, authRequest);
         return this.getAuthenticationManager().authenticate(authRequest);

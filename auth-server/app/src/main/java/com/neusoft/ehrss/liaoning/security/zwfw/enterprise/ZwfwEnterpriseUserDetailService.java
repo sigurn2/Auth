@@ -48,6 +48,7 @@ public class ZwfwEnterpriseUserDetailService implements UserDetailsService {
         String name = account.split("@@")[1];
         String mobile = account.split("@@")[2];
         String idNumber = account.split("@@")[3];
+        String uuid =account.split("@@")[4];
         log.debug("===============ZwfwEnterpriseUserDetailService获取用户信息用以信用代码={}， name = {}, mobile = {}， orgCode = {}========", idNumber, name, mobile, orgCode);
         ThinUser thinUser = thinUserRepository.findByOrgCode(orgCode);
         if (null == thinUser || !"1".equals(thinUser.getUserTypeString())) {
@@ -61,8 +62,10 @@ public class ZwfwEnterpriseUserDetailService implements UserDetailsService {
                 User user = factory.createEnterpriseUser("0", orgCode, name, "", mobile, null);
                 user.setOrgCode(orgCode);
                 user.inactiveUser();
+                user.setEmail(uuid);
                 user.setPassword("zwfw_auto_password");
                 user.setExtension("zwfw_register");
+
                 //user.setIdNumber( orgCode+"@@"+ idNumber);
                 user.setIdNumber(idNumber);
                 user.setAccount(orgCode);
@@ -78,9 +81,14 @@ public class ZwfwEnterpriseUserDetailService implements UserDetailsService {
                 throw new BadCredentialsException("未找到有效用户");
             }
         }
-
-
         ThinUserWithRole user = thinUserWithRoleRepository.findByOrgCode(orgCode);
+
+        //uuid 改造
+        if (!user.getEmail().equals(uuid)){
+            userCustomService.updateEmailForZwfwEnterprise(idNumber,uuid);
+        }
+
+
 
       //  userCustomService.updateUserForEntAndRoleZwfw(user.getOrgCode(),name);
 

@@ -57,7 +57,7 @@ MsgServiceImpl implements MsgService {
 	private RandomWordFactory wordFactory;
 
 	private static final String MESSAGE_PREFIX = "验证码：";
-	private static final String MESSAGE_SUFFIX = "，此验证码5分钟内有效，请尽快完成验证。";
+	private static final String MESSAGE_SUFFIX = "，此验证码1分钟内有效，请尽快完成验证。";
 
 	@Value("${pile.message.address}")
 	private String address = "http://162.17.51.1/piles/message";
@@ -94,7 +94,7 @@ MsgServiceImpl implements MsgService {
 	@Override
 	public SmCaptcha nextCaptcha(String mobilenumber, String webacc, MsgType msgType, SystemType systemType, UserType userType, BusinessType businessType, ClientType clientType, String channel, String sender) {
 
-		smCaptchaRepository.remove(mobilenumber);
+		smCaptchaRepository.remove("BX_SMS_"+mobilenumber);
 
 		WordBean wordBean = wordFactory.getNextWord();
 		// 持久化对象
@@ -113,6 +113,8 @@ MsgServiceImpl implements MsgService {
 		smCaptchaSendManager.updateSendCount(mobilenumber);
 		// 存储验证码
 		redisService.set("BX_SMS_"+mobilenumber,smCaptcha,1, TimeUnit.MINUTES);
+
+		log.debug("发送短信成功,发送手机号 mobilenumber={},发送验证码 ={}",mobilenumber,smCaptcha.getWord());
 
 	//	smCaptcha = smCaptchaRepository.save(smCaptcha);
 
@@ -137,12 +139,14 @@ MsgServiceImpl implements MsgService {
 
 	@Override
 	public boolean validateCaptcha(String mobile, String verifycode) {
-		SmCaptcha captcha = smCaptchaRepository.getCaptcha("BX_SMS_"+mobile);
+
+		String captcha = (String) redisService.get("BX_SMS_"+mobile);
+
 		if (null == captcha) {
 			return false;
 		} else {
-			log.debug("==存储的captchaWord为{}==", captcha.getWord());
-			if (captcha.verify(verifycode)) {
+			log.debug("==存储的captchaWord为{}==", captcha);
+			if (captcha.equals(verifycode)) {
 				// 从仓储移除此验证码
 				smCaptchaRepository.remove("BX_SMS_"+mobile);
 				return true;

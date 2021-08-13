@@ -27,6 +27,8 @@ public interface UserCustomService {
 
 	public void resetPasswordForFace(HttpServletRequest request);
 	public void updateIdNumberForZwfwApp(String account,String idNumber);
+	public void updateEmailForZwfw(String account,String email);
+	public void updateEmailForZwfwEnterprise(String orgcode,String email);
 	public void resetPassword(PassWordResetDetailDTO passWordResetDetailDTO, HttpServletRequest request);
 	public void updateNameForZwfwApp(String account,String name);
 	public void updateUserForPersonAndRole(String idNumber);
@@ -67,7 +69,7 @@ public interface UserCustomService {
 
 	public User createPersonUserATM(User user);
 
-	public User createPersonCloudbae(String username ,String idNumber, String name, String mobile, String extension);
+	public User createPersonCloudbae(String username ,String idNumber, String name, String mobile, String extension,String email);
 
 	// public User createPersonUserCloudbae(User user);
 

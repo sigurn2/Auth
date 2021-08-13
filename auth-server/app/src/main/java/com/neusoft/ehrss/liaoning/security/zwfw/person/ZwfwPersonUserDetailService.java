@@ -38,10 +38,6 @@ public class ZwfwPersonUserDetailService implements UserDetailsService {
 	@Autowired
 	private UserCustomService userCustomService;
 
-
-
-
-
 	/**
 	 * 载入用户
 	 */
@@ -52,6 +48,7 @@ public class ZwfwPersonUserDetailService implements UserDetailsService {
 		String name = account.split("@@")[1];
 		String mobile = account.split("@@")[2];
 		String username = account.split("@@")[3];
+		String uuid =account.split("@@")[4];
 		log.debug("================ZwfwPersonUserDetailService获取用户信息身份证={}， name = {}, mobile = {}, username = {}========", idNumber,name,mobile, username);
 		ThinUser thinUser = thinUserRepository.findByIdNumber(idNumber);
 		if (null == thinUser || !"2".equals(thinUser.getUserTypeString())) {
@@ -60,7 +57,8 @@ public class ZwfwPersonUserDetailService implements UserDetailsService {
 			// !"2".equals(thinUserPerson.getUserTypeString())) {
 
 			try {
-				User newUser = userCustomService.createPersonCloudbae(username,idNumber, name, mobile, "cloudbae_register");
+				User newUser = userCustomService.createPersonCloudbae(username,idNumber, name, mobile, "cloudbae_register",uuid);
+
 				UserLogManager.saveRegisterLog(SystemType.Person.toString(), "Cloudbae", newUser, null);
 			} catch (Exception e) {
 				log.error("zwfw创建用户失败", e);
@@ -68,8 +66,14 @@ public class ZwfwPersonUserDetailService implements UserDetailsService {
 			}
 
 		}
+
 		// 再次查询
 		ThinUser user = thinUserRepository.findByIdNumber(idNumber);
+		//uuid -> email
+		if (!user.getEmail().equals(uuid)){
+			userCustomService.updateEmailForZwfw(idNumber,uuid);
+		}
+
 		if (null == user || !"2".equals(user.getUserTypeString())) {
 			throw new BadCredentialsException("未找到有效用户");
 		}

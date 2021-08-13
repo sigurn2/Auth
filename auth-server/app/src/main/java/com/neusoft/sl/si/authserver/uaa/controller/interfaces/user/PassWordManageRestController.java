@@ -120,7 +120,7 @@ public class PassWordManageRestController {
 		} catch (Exception e) {
 			throw new BadCredentialsException(e.getMessage());
 		}
-		userService.forgetPassWord(passWordResetDetailDTO.getIdNumber(), passWordResetDetailDTO.getNewPassword());
+	//	userService.forgetPassWord(passWordResetDetailDTO.getIdNumber(), passWordResetDetailDTO.getNewPassword());
 	}
 
 

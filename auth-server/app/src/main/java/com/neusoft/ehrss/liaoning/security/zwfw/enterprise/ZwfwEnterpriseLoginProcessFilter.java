@@ -68,6 +68,7 @@ public class ZwfwEnterpriseLoginProcessFilter extends AbstractAuthenticationProc
         String username = "";
         String mobile = "";
         String password = "";
+        String uuid = "";
         String profession = "";
         log.debug("clienturl; = {} ", httpclienturl);
         JSONObject jsonObject = HttpClientTools.httpGet(httpclienturl,host,port);
@@ -92,17 +93,18 @@ public class ZwfwEnterpriseLoginProcessFilter extends AbstractAuthenticationProc
              username = Des3Tools.decode(userDTO.getJbrIdNumber());
              password = userDTO.getCompanyName();
              mobile = Des3Tools.decode(userDTO.getJbrMobile());
+             uuid = Des3Tools.decode(userDTO.getUuid());
              profession = Des3Tools.decode(userDTO.getProfession());
         } catch (Exception e) {
             throw new BadCredentialsException("加解密错误");
         }
-        log.debug("username = {}, name = {}, mobile = {} profession = {}", username, password, mobile, profession);
+        log.debug("username = {}, name = {}, mobile = {} profession = {},uuid={}", username, password, mobile, profession,uuid);
         //request.getSession()
         if (StringUtils.isEmpty(mobile) || StringUtils.isEmpty(username) || StringUtils.isEmpty(password) || StringUtils.isEmpty(profession)) {
             throw new BadCredentialsException("查询政务网关键信息为空，无法登陆");
         }
 
-        username = profession + "@@" + password + "@@" + mobile +"@@" + username;
+        username = profession + "@@" + password + "@@" + mobile +"@@" + username +"@@" + uuid;
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
         setDetails(request, authRequest);
         return this.getAuthenticationManager().authenticate(authRequest);
