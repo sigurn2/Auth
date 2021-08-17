@@ -21,8 +21,9 @@ import java.net.URLDecoder;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.neusoft.ehrss.liaoning.security.password.idnumbername.IdNumberNameAuthenticationToken;
+import com.neusoft.ehrss.liaoning.security.password.lst.LstAuthenticationToken;
 import com.neusoft.ehrss.liaoning.util.DesHelp;
-import com.neusoft.ehrss.liaoning.utils.DemoDesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -44,7 +45,6 @@ import org.springframework.util.StringUtils;
 
 import com.neusoft.ehrss.liaoning.security.password.atm.AtmAuthenticationToken;
 import com.neusoft.ehrss.liaoning.security.password.ecard.EcardGatewayAuthenticationToken;
-import com.neusoft.ehrss.liaoning.security.password.idnumbername.IdNumberNameAuthenticationToken;
 import com.neusoft.ehrss.liaoning.security.password.mobile.company.RlzyscCompanyAuthenticationToken;
 import com.neusoft.ehrss.liaoning.security.password.mobile.pattern.MobilePatternAuthenticationToken;
 import com.neusoft.ehrss.liaoning.security.password.mobile.person.RlzyscPersonAuthenticationToken;
@@ -155,6 +155,17 @@ public class ResourceOwnerPasswordTokenGranter extends AbstractTokenGranter {
 //				throw new BadCredentialsException("姓名为空");
             }
             userAuth = new IdNumberNameAuthenticationToken(username, password);
+        } else if ("lst".equals(loginType)){
+            username = parameters.get("idNumber");
+            if (StringUtils.isEmpty(username)) {
+                throw new BadCredentialsException("身份证号为空");
+            }
+            password = parameters.get("name");
+            if (StringUtils.isEmpty(password)) {
+                password = "";
+//				throw new BadCredentialsException("姓名为空");
+            }
+            userAuth = new LstAuthenticationToken(username, password);
         } else if ("nnrlzysc".equals(client.getClientId())) {
             if (StringUtils.isEmpty(username)) {
                 throw new BadCredentialsException("请输入用户名");

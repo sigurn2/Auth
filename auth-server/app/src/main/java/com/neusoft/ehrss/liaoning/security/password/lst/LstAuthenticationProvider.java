@@ -1,6 +1,5 @@
-package com.neusoft.ehrss.liaoning.security.password.idnumbername;
+package com.neusoft.ehrss.liaoning.security.password.lst;
 
-import com.neusoft.sl.si.authserver.uaa.userdetails.SaberUserDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -9,6 +8,8 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.neusoft.sl.si.authserver.uaa.userdetails.SaberUserDetails;
+
 /**
  * 带验证码的 用户名密码登录验证器
  * 
@@ -16,13 +17,13 @@ import org.springframework.security.core.userdetails.UserDetails;
  *
  */
 
-public class IdNumberNameAuthenticationProvider extends DaoAuthenticationProvider {
+public class LstAuthenticationProvider extends DaoAuthenticationProvider {
 
-	private static final Logger log = LoggerFactory.getLogger(IdNumberNameAuthenticationProvider.class);
+	private static final Logger log = LoggerFactory.getLogger(LstAuthenticationProvider.class);
 
 	@Override
 	public boolean supports(Class<? extends Object> authentication) {
-		return (IdNumberNameAuthenticationToken.class.isAssignableFrom(authentication)) && (authentication.getSimpleName().equals(IdNumberNameAuthenticationToken.class.getSimpleName()));
+		return (LstAuthenticationToken.class.isAssignableFrom(authentication)) && (authentication.getSimpleName().equals(LstAuthenticationToken.class.getSimpleName()));
 	}
 
 	@Override

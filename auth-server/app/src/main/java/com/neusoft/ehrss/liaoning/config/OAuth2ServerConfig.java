@@ -9,6 +9,8 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 
+import com.neusoft.ehrss.liaoning.security.password.lst.LstAuthenticationProvider;
+import com.neusoft.ehrss.liaoning.security.password.lst.LstUserDetailsService;
 import com.neusoft.sl.si.authserver.uaa.log.enums.ClientType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -43,7 +45,7 @@ import com.neusoft.ehrss.liaoning.security.password.atm.AtmAuthenticationProvide
 import com.neusoft.ehrss.liaoning.security.password.atm.AtmUserDetailsService;
 import com.neusoft.ehrss.liaoning.security.password.ecard.EcardGatewayAuthenticationProvider;
 import com.neusoft.ehrss.liaoning.security.password.ecard.EcardGatewayUserDetailsService;
-import com.neusoft.ehrss.liaoning.security.password.idnumbername.IdNumberNameAuthenticationProvider;
+import com.neusoft.ehrss.liaoning.security.password.idnumbername.*;
 import com.neusoft.ehrss.liaoning.security.password.idnumbername.IdNumberNameUserDetailsService;
 import com.neusoft.ehrss.liaoning.security.password.mobile.MobilePasswordAuthenticationProvider;
 import com.neusoft.ehrss.liaoning.security.password.mobile.MobileUserDetailsService;
@@ -163,6 +165,9 @@ public class OAuth2ServerConfig {
 		private EcardGatewayUserDetailsService ecardGatewayUserDetailsService;
 
 		@Autowired
+		private LstUserDetailsService lstUserDetailsService;
+
+		@Autowired
 		private AtmUserDetailsService atmUserDetailsService;
 
 		@Resource(name = "${saber.auth.password.encoder}")
@@ -235,10 +240,14 @@ public class OAuth2ServerConfig {
 			ecardGatewayProvider.setUserDetailsService(ecardGatewayUserDetailsService);
 			ecardGatewayProvider.setHideUserNotFoundExceptions(false);
 
+			LstAuthenticationProvider lstAuthenticationProvider = new LstAuthenticationProvider();
+			lstAuthenticationProvider.setUserDetailsService(lstUserDetailsService);
+			lstAuthenticationProvider.setHideUserNotFoundExceptions(false);
+
 			AtmAuthenticationProvider atmProvider = new AtmAuthenticationProvider();
 			atmProvider.setUserDetailsService(atmUserDetailsService);
 			atmProvider.setHideUserNotFoundExceptions(false);
-			return new ProviderManager(Arrays.asList(mobileProvider, patternProvider, idNumberNameProvider, ecardGatewayProvider, atmProvider, companyProvider, personProvider));
+			return new ProviderManager(Arrays.asList(mobileProvider, patternProvider, idNumberNameProvider, ecardGatewayProvider,lstAuthenticationProvider, atmProvider, companyProvider, personProvider));
 		}
 
 		@Override
