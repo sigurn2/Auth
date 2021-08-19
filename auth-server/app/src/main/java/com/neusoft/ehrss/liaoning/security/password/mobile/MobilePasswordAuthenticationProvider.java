@@ -45,20 +45,8 @@ public class MobilePasswordAuthenticationProvider extends DaoAuthenticationProvi
         return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication)) && (authentication.getSimpleName().equals(UsernamePasswordAuthenticationToken.class.getSimpleName()));
     }
 
-    @Override
-    public void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
-        try {
-            super.additionalAuthenticationChecks(userDetails, authentication);
-            // 验证通过删除
-            passwordErrorRedisManager.removePasswordErrorCount(userDetails.getUsername());
-        } catch (Exception ex) {
-            // 密码验证失败，增加次数
-            UserDetails details = (UserDetails) authentication.getDetails();
-            passwordErrorRedisManager.updatePasswordErrorCount(details.getPassword(), userDetails.getUsername());
-             throw new InternalAuthenticationServiceException("用户名或密码错误");
-        }
-
-
+    protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+        // super.additionalAuthenticationChecks(userDetails, authentication);
     }
 
 }
