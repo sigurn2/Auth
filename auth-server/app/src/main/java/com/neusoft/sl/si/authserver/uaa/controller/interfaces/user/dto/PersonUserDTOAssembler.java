@@ -30,16 +30,8 @@ public class PersonUserDTOAssembler {
         //user.setSecretQuestion(userDTO.getSecretQuestion());
         return user;
     }
-
-
-
-
-
-
-
     /**
      * 个人用户实体转换成DTO
-     * 
      * @param user
      * @return
      */

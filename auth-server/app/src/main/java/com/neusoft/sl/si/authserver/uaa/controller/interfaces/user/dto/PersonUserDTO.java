@@ -116,7 +116,7 @@ public class PersonUserDTO {
         this.email = email;
     }
 
-    public PersonUserDTO(String account, String idNumber, String name, String mobilenumber, String password) {
+    public PersonUserDTO(String account, String idNumber, String name, String mobilenumber,String password) {
         this.account = account;
         this.idNumber = idNumber;
         this.name = name;

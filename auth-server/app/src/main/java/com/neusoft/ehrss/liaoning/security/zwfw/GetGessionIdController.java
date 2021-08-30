@@ -39,8 +39,8 @@ public class GetGessionIdController {
 
     @Value("${saber.auth.zwfw.redirectURL}")
     private String redirectUrl = "";
-    
-    
+
+
     @Value("${saber.auth.zwfw.returnPersonUrl}")
     private  String returnPerurl;
 

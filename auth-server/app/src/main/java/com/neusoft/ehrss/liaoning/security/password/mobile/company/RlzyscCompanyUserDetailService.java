@@ -30,7 +30,7 @@ public class RlzyscCompanyUserDetailService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		log.debug("================RlzyscCompanyUserDetailService获取企业用户信息username={}========================", username);
 		ThinUser user = thinUserRepository.findByAccount(username);
-		if (null == user || !"1".equals(user.getUserTypeString())) {
+		if (null == user || !"1".equals(user.getUserTypeString()) ) {
 			user = thinUserRepository.findByOrgCode(username);
 			if (null == user || !"1".equals(user.getUserTypeString())) {
 				throw new BadCredentialsException("您输入的账号不存在，请重新输入");

@@ -90,10 +90,9 @@ public class MobileUserDetailsService implements UserDetailsService {
                         thinUser = thinUserRepository.findByIdNumber(userDTO.getIdNumber());
                     } else {
                         try {
-                            PersonUserDTO personUserDTO = new PersonUserDTO(userDTO.getUsername(), userDTO.getIdNumber(), userDTO.getName(), userDTO.getMobile());
+                            PersonUserDTO personUserDTO = new PersonUserDTO(userDTO.getUsername(), userDTO.getIdNumber(), userDTO.getName(), userDTO.getMobile(),"123456");
                             User user = PersonUserDTOAssembler.crtfromDTO(personUserDTO);
                             user.setIdType("01");
-                            user.setPassword(password);
                             user.setExtension("zwfw_app_autoReg");
                             user.setEmail(userDTO.getUuid());
                             // 保存user对象

@@ -31,7 +31,7 @@ public class LstUserDetailsService implements UserDetailsService {
 	@Autowired
 	private UserCustomService userCustomService;
 
-
+    // 本溪辽事通对接
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		log.debug("================MobileUserDetailsService获取用户信息username={}========", username);
 		ThinUser thinUser = thinUserRepository.findByIdNumber(username);

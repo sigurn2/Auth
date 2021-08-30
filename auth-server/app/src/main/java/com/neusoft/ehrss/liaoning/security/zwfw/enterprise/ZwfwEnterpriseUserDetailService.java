@@ -28,14 +28,11 @@ public class ZwfwEnterpriseUserDetailService implements UserDetailsService {
     @Autowired
     private ThinUserRepository thinUserRepository;
 
-
     @Autowired
     private UserCustomService userCustomService;
 
-
     @Autowired
     private ThinUserWithRoleRepository thinUserWithRoleRepository;
-
 
     /**
      * 载入用户
@@ -65,7 +62,6 @@ public class ZwfwEnterpriseUserDetailService implements UserDetailsService {
                 user.setEmail(uuid);
                 user.setPassword("zwfw_auto_password");
                 user.setExtension("zwfw_register");
-
                 //user.setIdNumber( orgCode+"@@"+ idNumber);
                 user.setIdNumber(idNumber);
                 user.setAccount(orgCode);
