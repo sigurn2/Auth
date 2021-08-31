@@ -115,7 +115,7 @@ public class ZwfwPersonLoginProcessFilter extends AbstractAuthenticationProcessi
         String password = userDTO.getName();
         String mobile = Des3Tools.decode(userDTO.getMobile());
         String account = userDTO.getUsername();
-        String uuid = Des3Tools.decode(userDTO.getUuid());
+        String uuid = userDTO.getUuid();
         log.debug("username = {}, name = {}, mobile = {}, account = {},uuid={}",username,password, mobile,account,uuid);
         //request.getSession()
       if (StringUtils.isEmpty(mobile)||StringUtils.isEmpty(username)||StringUtils.isEmpty(password)){

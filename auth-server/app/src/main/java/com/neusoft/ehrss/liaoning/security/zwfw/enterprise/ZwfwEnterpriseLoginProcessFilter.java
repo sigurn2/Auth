@@ -93,7 +93,7 @@ public class ZwfwEnterpriseLoginProcessFilter extends AbstractAuthenticationProc
              username = Des3Tools.decode(userDTO.getJbrIdNumber());
              password = userDTO.getCompanyName();
              mobile = Des3Tools.decode(userDTO.getJbrMobile());
-             uuid = Des3Tools.decode(userDTO.getUuid());
+             uuid = userDTO.getUuid();
              profession = Des3Tools.decode(userDTO.getProfession());
         } catch (Exception e) {
             throw new BadCredentialsException("加解密错误");
