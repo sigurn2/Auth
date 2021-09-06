@@ -70,9 +70,7 @@ public class ZwfwPersonUserDetailService implements UserDetailsService {
 		// 再次查询
 		ThinUser user = thinUserRepository.findByIdNumber(idNumber);
 		//uuid -> email
-		if (!user.getEmail().equals(uuid)){
-			userCustomService.updateEmailForZwfw(idNumber,uuid);
-		}
+
 
 		if (null == user || !"2".equals(user.getUserTypeString())) {
 			throw new BadCredentialsException("未找到有效用户");

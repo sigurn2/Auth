@@ -84,17 +84,8 @@ public class ZwfwEnterpriseUserDetailService implements UserDetailsService {
             userCustomService.updateEmailForZwfwEnterprise(idNumber,uuid);
         }
 
-
-
-      //  userCustomService.updateUserForEntAndRoleZwfw(user.getOrgCode(),name);
-
         User userinfo = userRepository.findByOrgCode(orgCode);
-//        if (!thinUser.isActivated()) {
-//            throw new BadCredentialsException("您输入的账号未激活");
-//        }
-//		if (thinUser.isRealNameAuthed() || thinUser.isBindCardAuthed()) {
-//			userCustomService.updateUserForPersonAndRole(thinUser.getIdNumber());
-//		}
+
         return new EnterpriseCAUserDetails(userinfo);
     }
 }
