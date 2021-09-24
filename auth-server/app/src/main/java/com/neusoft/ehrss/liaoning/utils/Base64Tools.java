@@ -122,7 +122,7 @@ public class Base64Tools {
 	public static void main(String[] args) {
 
 		try {
-			String s = "5rW35rSL5LiO5riU5Lia56eR5oqA5oiQ5p6c5L+d5a+G6aG555uu5a6h5om5";
+			String s = "aHR0cDovLzIxOC42MC4xNTAuMTo4MDgxL3VhYS9hcGkvendmdy9wZXJzb24v%20bG9naW4=";
 			System.out.println(new String(Base64Tools.decode(s),"UTF-8"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

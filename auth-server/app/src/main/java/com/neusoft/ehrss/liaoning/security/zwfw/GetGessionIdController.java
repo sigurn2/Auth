@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -56,15 +57,22 @@ public class GetGessionIdController {
     private String surlenterprise;
 
 
-    @RequestMapping("/getGssionid/person")
-    private String getGssionidPer(HttpSession httpSession){
+    @GetMapping("/getGssionid/person")
+    private String getGssionidPer(HttpSession httpSession, HttpServletRequest request){
         log.debug(surlperson);
         String coSessionId=httpSession.getId();
-        //String surl="http://127.0.0.1:9999/uaa/idstools/getSso";
-        //String surl="http://127.0.0.1:9999/uaa/api/zwfw/person/login";
         coSessionId=Base64Tools.encode(coSessionId.getBytes());
         System.out.print(Base64Tools.encode(coAppName.getBytes()));
-        String idsurl = redirectUrl+"LoginServlet?coAppName="+Base64Tools.encode(coAppName.getBytes())+"&coSessionId="+coSessionId+"&surl="+ Base64Tools.encode(surlperson.getBytes());
+        String sid = request.getParameter("sid");
+        String benxi_surl=surlperson+"?sid="+sid;
+        String idsurl;
+        if (sid.isEmpty()){
+             idsurl = redirectUrl+"LoginServlet?coAppName="+Base64Tools.encode(coAppName.getBytes())+"&coSessionId="+coSessionId+"&surl="+ Base64Tools.encode(surlperson.getBytes());
+        }
+        else {
+             idsurl = redirectUrl+"LoginServlet?coAppName="+Base64Tools.encode(coAppName.getBytes())+"&coSessionId="+coSessionId+"&surl="+ Base64Tools.encode(benxi_surl.getBytes());
+        }
+        log.debug("benxi_redirecturl={}",redirectUrl+"LoginServlet?coAppName="+Base64Tools.encode(coAppName.getBytes())+"&coSessionId="+coSessionId+"&surl="+ benxi_surl);
         Map<String, String> params=new HashMap<>();
         //JSONObject jsonObject = HttpClientTools.httpPost(idsurl,params);
         return "redirect:"+idsurl;
@@ -73,15 +81,22 @@ public class GetGessionIdController {
     }
 
 
-    @RequestMapping("/getGssionid/enterprise")
-    private String getGssionidEnt(HttpSession httpSession){
+    @GetMapping("/getGssionid/enterprise")
+    private String getGssionidEnt(HttpSession httpSession,HttpServletRequest request){
         log.debug(surlenterprise);
         String coSessionId=httpSession.getId();
-        //String surl="http://127.0.0.1:9999/uaa/idstools/getSso";
-        //String surl="http://127.0.0.1:9999/uaa/api/zwfw/person/login";
+        String sid= request.getParameter("sid");
+        String benxi_surl=surlenterprise+"?sid="+sid;
         coSessionId=Base64Tools.encode(coSessionId.getBytes());
         System.out.print(Base64Tools.encode(coAppName.getBytes()));
-        String idsurl = redirectUrl+"LoginServlet?coAppName="+Base64Tools.encode(coAppName.getBytes())+"&coSessionId="+coSessionId+"&surl="+ Base64Tools.encode(surlenterprise.getBytes());
+        String idsurl;
+        if (sid.isEmpty()){
+            idsurl = redirectUrl+"LoginServlet?coAppName="+Base64Tools.encode(coAppName.getBytes())+"&coSessionId="+coSessionId+"&surl="+ Base64Tools.encode(surlenterprise.getBytes());
+        }
+        else {
+            idsurl = redirectUrl+"LoginServlet?coAppName="+Base64Tools.encode(coAppName.getBytes())+"&coSessionId="+coSessionId+"&surl="+ Base64Tools.encode(benxi_surl.getBytes());
+        }
+        log.debug("benxi_redirecturl={}",redirectUrl+"LoginServlet?coAppName="+Base64Tools.encode(coAppName.getBytes())+"&coSessionId="+coSessionId+"&surl="+ benxi_surl);
         Map<String, String> params=new HashMap<>();
         //JSONObject jsonObject = HttpClientTools.httpPost(idsurl,params);
         return "redirect:"+idsurl;

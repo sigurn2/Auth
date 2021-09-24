@@ -6,6 +6,7 @@ import com.neusoft.ehrss.liaoning.config.channel.ChannelConfiguration;
 import com.neusoft.ehrss.liaoning.config.channel.dto.ChannelDTO;
 import com.neusoft.ehrss.liaoning.provider.ecard.EcardService;
 import com.neusoft.ehrss.liaoning.provider.ecard.response.EcardCardResponse;
+import com.neusoft.ehrss.liaoning.security.password.idnumbername.RedisService;
 import com.neusoft.ehrss.liaoning.security.person.QRCodeRequestProcessingFilter;
 import com.neusoft.ehrss.liaoning.security.person.ecard.utils.AESUtils;
 import com.neusoft.ehrss.liaoning.security.person.ecard.utils.SignUtil;
@@ -20,6 +21,7 @@ import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -60,6 +62,8 @@ public class ZwfwPersonLoginProcessFilter extends AbstractAuthenticationProcessi
 
     private UserCustomService userService;
 
+    @Autowired
+    RedisService redisService;
 
     private String baseUrl;
     
@@ -83,6 +87,7 @@ public class ZwfwPersonLoginProcessFilter extends AbstractAuthenticationProcessi
         HttpSession httpSession = request.getSession();
         String gSessionId= request.getParameter("com.trs.idm.gSessionId");
         String trsidsssosessionid =  request.getParameter("trsidsssosessionid");
+        String Sid = request.getParameter("benxiSID");
         String ssoSessionId = org.apache.commons.lang3.StringUtils.isBlank(gSessionId)?trsidsssosessionid:gSessionId;
         httpSession.setAttribute("ssoSessionId",ssoSessionId);
         String httpSessionid=httpSession.getId();
@@ -116,6 +121,16 @@ public class ZwfwPersonLoginProcessFilter extends AbstractAuthenticationProcessi
         String mobile = Des3Tools.decode(userDTO.getMobile());
         String account = userDTO.getUsername();
         String uuid = userDTO.getUuid();
+        //2021.09.24 更新 新增营商局点击模块跳转网厅对应模块
+
+        log.debug("申报业务跳转对应sid={}",Sid);
+        if (redisService.hasKey("SID:"+username))
+        {
+            redisService.delete("SID:"+username);
+        }
+        redisService.set("SID:"+username,Sid,5, TimeUnit.MINUTES);
+        log.debug("Redis里存的sid={}",redisService.get("SID:"+username));
+
         log.debug("username = {}, name = {}, mobile = {}, account = {},uuid={}",username,password, mobile,account,uuid);
         //request.getSession()
       if (StringUtils.isEmpty(mobile)||StringUtils.isEmpty(username)||StringUtils.isEmpty(password)){
