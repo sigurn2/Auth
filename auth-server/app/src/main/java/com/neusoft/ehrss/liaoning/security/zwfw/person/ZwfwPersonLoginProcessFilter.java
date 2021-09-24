@@ -87,7 +87,7 @@ public class ZwfwPersonLoginProcessFilter extends AbstractAuthenticationProcessi
         HttpSession httpSession = request.getSession();
         String gSessionId= request.getParameter("com.trs.idm.gSessionId");
         String trsidsssosessionid =  request.getParameter("trsidsssosessionid");
-        String Sid = request.getParameter("benxiSID");
+        String Sid = request.getParameter("sid");
         String ssoSessionId = org.apache.commons.lang3.StringUtils.isBlank(gSessionId)?trsidsssosessionid:gSessionId;
         httpSession.setAttribute("ssoSessionId",ssoSessionId);
         String httpSessionid=httpSession.getId();

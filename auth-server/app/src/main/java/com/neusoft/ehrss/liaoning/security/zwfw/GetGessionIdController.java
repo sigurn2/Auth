@@ -66,7 +66,7 @@ public class GetGessionIdController {
         String sid = request.getParameter("sid");
         String benxi_surl=surlperson+"?sid="+sid;
         String idsurl;
-        if (sid.isEmpty()){
+        if (sid.length()==0){
              idsurl = redirectUrl+"LoginServlet?coAppName="+Base64Tools.encode(coAppName.getBytes())+"&coSessionId="+coSessionId+"&surl="+ Base64Tools.encode(surlperson.getBytes());
         }
         else {
@@ -90,7 +90,7 @@ public class GetGessionIdController {
         coSessionId=Base64Tools.encode(coSessionId.getBytes());
         System.out.print(Base64Tools.encode(coAppName.getBytes()));
         String idsurl;
-        if (sid.isEmpty()){
+        if (sid.length()==0){
             idsurl = redirectUrl+"LoginServlet?coAppName="+Base64Tools.encode(coAppName.getBytes())+"&coSessionId="+coSessionId+"&surl="+ Base64Tools.encode(surlenterprise.getBytes());
         }
         else {
