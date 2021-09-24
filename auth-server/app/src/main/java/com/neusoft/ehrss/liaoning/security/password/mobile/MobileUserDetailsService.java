@@ -108,7 +108,6 @@ public class MobileUserDetailsService implements UserDetailsService {
                 }
                 return new MobileUserDetails(thinUser);
 
-
             } else {
                 JSONObject json = checkUserPwd(username, password);
                 ZwfwUserDTO userDTO = JSONObject.parseObject(json.get("result").toString(), ZwfwUserDTO.class);

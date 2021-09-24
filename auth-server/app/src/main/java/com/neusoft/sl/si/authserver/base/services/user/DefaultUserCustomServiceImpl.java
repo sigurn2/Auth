@@ -185,8 +185,8 @@ public class DefaultUserCustomServiceImpl implements UserCustomService {
         userRepository.save(user);
     }
 
-    public void updateEmailForZwfw(String account,String email){
-        User user = userRepository.findByAccount(account);
+    public void updateEmailForZwfw(String idNumber,String email){
+        User user = userRepository.findByIdNumber(idNumber);
         user.setEmail(email);
         userRepository.save(user);
     }

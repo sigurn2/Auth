@@ -77,9 +77,6 @@ public class UserLoginWithImgCaptchaRequestProcessingFilter extends AbstractAuth
             throw new CaptchaErrorException("请输入密码");
         }
 
-
-
-
         //本溪个人老项目静默注册
         //校验是否已经转换，如果已经转换则不需要查询转换表
         //先查询是否存在tuser 存在则校验是否是转换用户，如果是 则 锁定用户，否则校验转换用户名密码

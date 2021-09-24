@@ -48,8 +48,8 @@ public class ZwfwPersonUserDetailService implements UserDetailsService {
 		String name = account.split("@@")[1];
 		String mobile = account.split("@@")[2];
 		String username = account.split("@@")[3];
-		String uuid =account.split("@@")[4];
-		log.debug("================ZwfwPersonUserDetailService获取用户信息身份证={}， name = {}, mobile = {}, username = {}========", idNumber,name,mobile, username);
+		String uuid = account.split("@@")[4];
+		log.debug("================ZwfwPersonUserDetailService获取用户信息={}， name = {}, mobile = {}, username = {},uuid={}========", idNumber, name, mobile, username,uuid);
 		ThinUser thinUser = thinUserRepository.findByIdNumber(idNumber);
 		if (null == thinUser || !"2".equals(thinUser.getUserTypeString())) {
 			// thinUserPerson = thinUserRepository.findByIdNumber(username);
@@ -57,32 +57,27 @@ public class ZwfwPersonUserDetailService implements UserDetailsService {
 			// !"2".equals(thinUserPerson.getUserTypeString())) {
 
 			try {
-				User newUser = userCustomService.createPersonCloudbae(username,idNumber, name, mobile, "cloudbae_register",uuid);
-
+				User newUser = userCustomService.createPersonCloudbae(username, idNumber, name, mobile, "cloudbae_register", uuid);
 				UserLogManager.saveRegisterLog(SystemType.Person.toString(), "Cloudbae", newUser, null);
 			} catch (Exception e) {
 				log.error("zwfw创建用户失败", e);
 				throw new BadCredentialsException(e.getMessage());
 			}
 
+			thinUser = thinUserRepository.findByIdNumber(idNumber);
+			return new IdNumberNameUserDetails(thinUser);
+		} else {
+			if (null == thinUser.getEmail()){
+				userCustomService.updateEmailForZwfw(idNumber,uuid);
+			}
+			if (!thinUser.isActivated()) {
+				throw new BadCredentialsException("您输入的账号未激活");
+			}
+
+			return new IdNumberNameUserDetails(thinUser);
 		}
 
-		// 再次查询
-		ThinUser user = thinUserRepository.findByIdNumber(idNumber);
-		//uuid -> email
-
-
-		if (null == user || !"2".equals(user.getUserTypeString())) {
-			throw new BadCredentialsException("未找到有效用户");
-		}
-		if (!user.isActivated()) {
-			throw new BadCredentialsException("您输入的账号未激活");
-		}
-		//if (user.isRealNameAuthed() || user.isBindCardAuthed()) {
-
-		//}
-
-	//	userCustomService.updateUserForPersonAndRoleByZwfw(user.getIdNumber(),user.getName());
-		return new IdNumberNameUserDetails(user);
 	}
+
+
 }
