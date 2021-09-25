@@ -115,8 +115,7 @@ public class UserManageRestController {
     @Autowired
     private UserCustomService userCustomService;
 
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+
 
 
     @Autowired
@@ -224,6 +223,18 @@ public class UserManageRestController {
         return null;
     }
 
+    @GetMapping(value = "/sid")
+    public Object getSid(Principal user) {
+        OAuth2Authentication authentication = (OAuth2Authentication) user;
+        Authentication userAuth = authentication.getUserAuthentication();
+        Object principal = userAuth.getPrincipal();
+        String account = (String) principal;
+        User userInfo = userService.findByAccount(account);
+        //这个return 可读性爆炸了
+        return Optional.ofNullable(redisService.get("SID:"+userInfo.getOrgCode())).orElseGet(()->redisService.get("SID:"+userInfo.getIdNumber()));
+
+    }
+
     /**
      * 获取用户信息
      *
@@ -283,7 +294,7 @@ public class UserManageRestController {
     /**
      * 获取用户能够访问的某个系统的菜单列表
      *
-     * @param user
+
      * @param appid
      * @return
      */
@@ -336,7 +347,7 @@ public class UserManageRestController {
     /**
      * 修改个人用户手机号码
      *
-     * @param userDTO
+
      * @return
      */
     @ApiOperation(value = "PUT修改个人用户手机号码", tags = "手机号码操作接口", notes = "修改个人用户手机号码，需要登录；处理了redis缓存数据信息;UserManageRestController")
@@ -390,7 +401,7 @@ public class UserManageRestController {
      * 为用户添加角色
      *
      * @param account
-     * @param roleId
+
      */
     @ApiOperation(value = "POST为用户添加角色", tags = "用户操作接口", notes = "为用户添加角色,UserManageRestController")
     @RequestMapping(value = "/user/{account}/role/{rolename}", method = RequestMethod.POST)
@@ -409,7 +420,7 @@ public class UserManageRestController {
      * 为用户撤销某个角色的授权
      *
      * @param account
-     * @param roleId
+
      */
     @ApiOperation(value = "DELETE为用户撤销某个角色的授权", tags = "用户操作接口", notes = "为用户撤销某个角色的授权,UserManageRestController")
     @RequestMapping(value = "/user/{account}/role/{rolename}", method = RequestMethod.DELETE)
