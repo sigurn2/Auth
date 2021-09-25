@@ -1,14 +1,17 @@
 package com.neusoft.ehrss.liaoning.security.zwfw.enterprise;
 
 import com.alibaba.fastjson.JSONObject;
+import com.neusoft.ehrss.liaoning.security.password.idnumbername.RedisService;
 import com.neusoft.ehrss.liaoning.security.person.QRCodeRequestProcessingFilter;
 import com.neusoft.ehrss.liaoning.security.zwfw.dto.ZwfwUserDTO;
 import com.neusoft.ehrss.liaoning.utils.Base64Tools;
 import com.neusoft.ehrss.liaoning.utils.HttpClientTools;
+import com.neusoft.sl.girder.ddd.hibernate.utils.SpringContextUtils;
 import com.neusoft.sl.si.authserver.base.services.user.UserCustomService;
 import com.trs.Des3Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @program: liaoning-auth
@@ -39,6 +43,8 @@ public class ZwfwEnterpriseLoginProcessFilter extends AbstractAuthenticationProc
 
     private UserCustomService userService;
 
+    @Autowired
+    RedisService redisService;
 
     private String baseUrl;
 
@@ -63,6 +69,7 @@ public class ZwfwEnterpriseLoginProcessFilter extends AbstractAuthenticationProc
         String trsidsssosessionid = request.getParameter("trsidsssosessionid");
         String ssoSessionId = org.apache.commons.lang3.StringUtils.isBlank(gSessionId) ? trsidsssosessionid : gSessionId;
         httpSession.setAttribute("ssoSessionId", ssoSessionId);
+        String Sid = request.getParameter("sid");
         String httpSessionid = httpSession.getId();
         String httpclienturl = baseUrl + "service?idsServiceType=httpssoservice&serviceName=findUserBySSOID&coAppName=" + coAppName + "&ssoSessionId=" + ssoSessionId + "&coSessionId=" + httpSessionid + "&type=json";
         String username = "";
@@ -98,6 +105,21 @@ public class ZwfwEnterpriseLoginProcessFilter extends AbstractAuthenticationProc
         } catch (Exception e) {
             throw new BadCredentialsException("加解密错误");
         }
+
+        //2021.09.24 更新 新增营商局点击模块跳转网厅对应模块
+
+        if (Sid !=null){
+            RedisService redisService = SpringContextUtils.getBean("RedisService");
+            log.debug("sid不为空，申报业务跳转对应sid={}",Sid);
+            if (redisService.hasKey("SID:"+profession))
+            {
+                redisService.delete("SID:"+profession);
+            }
+            redisService.set("SID:" + profession, Sid, 5, TimeUnit.MINUTES);
+
+            log.debug("Redis里存的sid={}",redisService.get("SID:"+profession));
+        }
+
         log.debug("username = {}, name = {}, mobile = {} profession = {},uuid={}", username, password, mobile, profession,uuid);
         //request.getSession()
         if (StringUtils.isEmpty(mobile) || StringUtils.isEmpty(username) || StringUtils.isEmpty(password) || StringUtils.isEmpty(profession)) {

@@ -18,6 +18,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @program: liaoning-auth
@@ -41,11 +42,8 @@ public class GetGessionIdController {
     @Value("${saber.auth.zwfw.redirectURL}")
     private String redirectUrl = "";
 
-
     @Value("${saber.auth.zwfw.returnPersonUrl}")
     private  String returnPerurl;
-
-
 
     @Value("${saber.auth.zwfw.returnEntUrl}")
     private  String returnEnturl;
@@ -56,75 +54,57 @@ public class GetGessionIdController {
     @Value("${saber.auth.zwfw.enterprise.surl}")
     private String surlenterprise;
 
-
-    @GetMapping("/getGssionid/person")
+    @RequestMapping("/getGssionid/person")
     private String getGssionidPer(HttpSession httpSession, HttpServletRequest request){
         log.debug(surlperson);
         String coSessionId=httpSession.getId();
         coSessionId=Base64Tools.encode(coSessionId.getBytes());
         System.out.print(Base64Tools.encode(coAppName.getBytes()));
-        String sid = request.getParameter("sid");
+        String sid= request.getParameter("sid");
+        Optional<String> surl = Optional.ofNullable(sid);
         String benxi_surl=surlperson+"?sid="+sid;
         String idsurl;
-        if (sid.length()==0){
+        if (!surl.isPresent()){
              idsurl = redirectUrl+"LoginServlet?coAppName="+Base64Tools.encode(coAppName.getBytes())+"&coSessionId="+coSessionId+"&surl="+ Base64Tools.encode(surlperson.getBytes());
+             log.debug("benxi_redirecturl={}",idsurl);
         }
         else {
              idsurl = redirectUrl+"LoginServlet?coAppName="+Base64Tools.encode(coAppName.getBytes())+"&coSessionId="+coSessionId+"&surl="+ Base64Tools.encode(benxi_surl.getBytes());
+            log.debug("benxi_redirecturl={}",redirectUrl+"LoginServlet?coAppName="+Base64Tools.encode(coAppName.getBytes())+"&coSessionId="+coSessionId+"&surl="+ benxi_surl);
         }
         log.debug("benxi_redirecturl={}",redirectUrl+"LoginServlet?coAppName="+Base64Tools.encode(coAppName.getBytes())+"&coSessionId="+coSessionId+"&surl="+ benxi_surl);
         Map<String, String> params=new HashMap<>();
-        //JSONObject jsonObject = HttpClientTools.httpPost(idsurl,params);
         return "redirect:"+idsurl;
-//            jsonObject.getString("com.trs.idm.gSessionId");
-//            return jsonObject;
+
     }
 
 
-    @GetMapping("/getGssionid/enterprise")
+    @RequestMapping("/getGssionid/enterprise")
     private String getGssionidEnt(HttpSession httpSession,HttpServletRequest request){
         log.debug(surlenterprise);
         String coSessionId=httpSession.getId();
-        String sid= request.getParameter("sid");
+
+        String sid = request.getParameter("sid");
+        Optional<String> surl = Optional.ofNullable(sid);
+
         String benxi_surl=surlenterprise+"?sid="+sid;
         coSessionId=Base64Tools.encode(coSessionId.getBytes());
         System.out.print(Base64Tools.encode(coAppName.getBytes()));
         String idsurl;
-        if (sid.length()==0){
+        if (!surl.isPresent()){
             idsurl = redirectUrl+"LoginServlet?coAppName="+Base64Tools.encode(coAppName.getBytes())+"&coSessionId="+coSessionId+"&surl="+ Base64Tools.encode(surlenterprise.getBytes());
+            log.debug("benxi_redirecturl={}",idsurl);
         }
         else {
             idsurl = redirectUrl+"LoginServlet?coAppName="+Base64Tools.encode(coAppName.getBytes())+"&coSessionId="+coSessionId+"&surl="+ Base64Tools.encode(benxi_surl.getBytes());
+            log.debug("benxi_redirecturl={}",redirectUrl+"LoginServlet?coAppName="+Base64Tools.encode(coAppName.getBytes())+"&coSessionId="+coSessionId+"&surl="+ benxi_surl);
+
         }
-        log.debug("benxi_redirecturl={}",redirectUrl+"LoginServlet?coAppName="+Base64Tools.encode(coAppName.getBytes())+"&coSessionId="+coSessionId+"&surl="+ benxi_surl);
         Map<String, String> params=new HashMap<>();
-        //JSONObject jsonObject = HttpClientTools.httpPost(idsurl,params);
         return "redirect:"+idsurl;
-//            jsonObject.getString("com.trs.idm.gSessionId");
-//            return jsonObject;
+
     }
-//
-//    @RequestMapping("/getSso")
-//    @ResponseBody
-//    private Object getSso(HttpSession httpSession, HttpServletRequest request, HttpServletResponse reponse) throws IOException {
-//        String gSessionId= request.getParameter("com.trs.idm.gSessionId");
-//        String trsidsssosessionid =  request.getParameter("trsidsssosessionid");
-//        String ssoSessionId = StringUtils.isBlank(gSessionId)?trsidsssosessionid:gSessionId;
-//        httpSession.setAttribute("ssoSessionId",ssoSessionId);
-//        String httpSessionid=httpSession.getId();
-//        String httpclienturl=baseUrl+"service?idsServiceType=httpssoservice&serviceName=findUserBySSOID&coAppName="+coAppName+"&ssoSessionId="+ssoSessionId+"&coSessionId="+httpSessionid+"&type=json";
-//        JSONObject jsonObject = HttpClientTools.httpGet(httpclienturl);
-//        String loginurl=baseUrl+"custom/liaoning/login.jsp?coAppName="+Base64Tools.encode(coAppName.getBytes())+"&coSessionId="+httpSessionid+"&gSessionId="+ssoSessionId+"&surl="+Base64Tools.encode(returnurl.getBytes());
-//        if("200".equals(jsonObject.get("code"))){
-//            System.out.println("success");
-//        }else if("404".equals(jsonObject.get("code")+"")){
-//            reponse.sendRedirect(loginurl);
-//            return null;
-//        }else if("500".equals(jsonObject.get("code"))){
-//            System.out.println("error");
-//        }
-//        return jsonObject;
-//    }
+
 
 
 }

@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author y_zhang.neu
  */
-@Service
+@Service(value = "RedisService")
 public class RedisServiceImpl implements RedisService {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
