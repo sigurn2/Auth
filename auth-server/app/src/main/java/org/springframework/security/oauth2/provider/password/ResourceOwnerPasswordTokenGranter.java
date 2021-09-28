@@ -162,10 +162,9 @@ public class ResourceOwnerPasswordTokenGranter extends AbstractTokenGranter {
             }
             password = parameters.get("name");
             if (StringUtils.isEmpty(password)) {
-                password = "";
-//				throw new BadCredentialsException("姓名为空");
+			throw new BadCredentialsException("姓名为空");
             }
-            userAuth = new LstAuthenticationToken(username, password);
+            userAuth = new LstAuthenticationToken(username+"@@"+password, password);
         } else if ("nnrlzysc".equals(client.getClientId())) {
             if (StringUtils.isEmpty(username)) {
                 throw new BadCredentialsException("请输入用户名");

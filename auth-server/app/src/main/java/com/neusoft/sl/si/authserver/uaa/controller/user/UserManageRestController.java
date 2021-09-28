@@ -19,6 +19,7 @@ import com.neusoft.sl.si.authserver.uaa.controller.user.dto.*;
 import com.neusoft.sl.si.authserver.uaa.controller.user.dto.EnterpriseUserDTO;
 import com.neusoft.sl.si.authserver.uaa.log.UserLogManager;
 import com.neusoft.sl.si.authserver.uaa.log.enums.SystemType;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +72,7 @@ import io.swagger.annotations.ApiOperation;
  *
  * @author mojf
  */
+@Slf4j
 @RestController
 public class UserManageRestController {
 
@@ -228,11 +230,25 @@ public class UserManageRestController {
         OAuth2Authentication authentication = (OAuth2Authentication) user;
         Authentication userAuth = authentication.getUserAuthentication();
         Object principal = userAuth.getPrincipal();
-        String account = (String) principal;
+        String account = "";
+        account = (String) principal;
         User userInfo = userService.findByAccount(account);
-        //这个return 可读性爆炸了
-        return Optional.ofNullable(redisService.get("SID:"+userInfo.getOrgCode())).orElseGet(()->redisService.get("SID:"+userInfo.getIdNumber()));
+        Map<String, String> map = new HashMap<String, String>();
 
+        if (userInfo.getOrgCode() != null){
+            map.put("sid", (String) redisService.get("SID:"+userInfo.getOrgCode()));
+        }
+        else {
+            map.put("sid", (String) redisService.get("SID:"+userInfo.getIdNumber()));
+        }
+        return map;
+    }
+
+    @GetMapping("/SID")
+    public Map<String, String> getSID(HttpServletRequest request){
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("sid", (String) redisService.get("SID:"+request.getParameter("account")));
+        return map;
     }
 
     /**

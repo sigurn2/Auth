@@ -70,7 +70,7 @@ public class DefaultUsernamePasswordSecurityConfiguration extends WebSecurityCon
         // "/configuration/**", "/card/**",
         // "/right/**", "/calogin/**", "/custom/**", "/druid/**");
         // 国考
-        web.ignoring().antMatchers("/", "/info","/", "/captcha/**", "/ws/**", "/webservice/**", "/fonts/**", "/views/**",
+        web.ignoring().antMatchers("/", "/info","/", "/captcha/**","/SID", "/ws/**", "/webservice/**", "/fonts/**", "/views/**",
                 "/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/v2/**", "/configuration/**", "/card/**",
                 "/right/**", "/calogin/**", "/custom/**", "/druid/**", "/uic/**", "/console/**","/idstools/**");
     }
