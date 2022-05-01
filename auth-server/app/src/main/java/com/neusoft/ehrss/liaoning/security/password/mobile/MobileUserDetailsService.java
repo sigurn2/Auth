@@ -93,6 +93,7 @@ public class MobileUserDetailsService implements UserDetailsService {
                             PersonUserDTO personUserDTO = new PersonUserDTO(userDTO.getUsername(), userDTO.getIdNumber(), userDTO.getName(), userDTO.getMobile(),"123456");
                             User user = PersonUserDTOAssembler.crtfromDTO(personUserDTO);
                             user.setIdType("01");
+                            user.setMobile(userDTO.getMobile());
                             user.setExtension("zwfw_app_autoReg");
                             user.setEmail(userDTO.getUuid());
                             // 保存user对象
@@ -120,6 +121,10 @@ public class MobileUserDetailsService implements UserDetailsService {
                     userCustomService.updateNameForZwfwApp(userDTO.getUsername(),userDTO.getName());
                 }
                 if ("0000".equals(json.get("code"))) {
+                    if (null == thinUser.getMobile()){
+                        userCustomService.updateMobileForZwfw(userDTO.getIdNumber(),userDTO.getMobile());
+                    }
+
                     return new MobileUserDetails(thinUser);
                 } else {
                     throw new BadCredentialsException("用户名密码错误");

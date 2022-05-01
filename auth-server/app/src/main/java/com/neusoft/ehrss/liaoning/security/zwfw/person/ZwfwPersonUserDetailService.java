@@ -70,6 +70,9 @@ public class ZwfwPersonUserDetailService implements UserDetailsService {
 			if (null == thinUser.getEmail()){
 				userCustomService.updateEmailForZwfw(idNumber,uuid);
 			}
+			if (null == thinUser.getMobile()){
+				userCustomService.updateMobileForZwfw(idNumber,mobile);
+			}
 			if (!thinUser.isActivated()) {
 				throw new BadCredentialsException("您输入的账号未激活");
 			}

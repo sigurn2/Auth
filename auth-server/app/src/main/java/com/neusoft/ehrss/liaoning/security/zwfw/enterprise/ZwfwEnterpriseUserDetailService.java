@@ -83,6 +83,10 @@ public class ZwfwEnterpriseUserDetailService implements UserDetailsService {
         if (!user.getEmail().equals(uuid)){
             userCustomService.updateEmailForZwfwEnterprise(idNumber,uuid);
         }
+        //mobile 改造
+        if (!user.getMobile().equals(mobile)){
+            userCustomService.updateMobileForZwfwEnterprise(idNumber,mobile);
+        }
 
         User userinfo = userRepository.findByOrgCode(orgCode);
 

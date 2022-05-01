@@ -28,7 +28,10 @@ public interface UserCustomService {
 	public void resetPasswordForFace(HttpServletRequest request);
 	public void updateIdNumberForZwfwApp(String account,String idNumber);
 	public void updateEmailForZwfw(String account,String email);
+	public void updateMobileForZwfw(String idNumber,String mobile);
 	public void updateEmailForZwfwEnterprise(String orgcode,String email);
+	public void updateMobileForZwfwEnterprise(String orgcode,String mobile);
+
 	public void resetPassword(PassWordResetDetailDTO passWordResetDetailDTO, HttpServletRequest request);
 	public void updateNameForZwfwApp(String account,String name);
 	public void updateUserForPersonAndRole(String idNumber);

@@ -190,10 +190,19 @@ public class DefaultUserCustomServiceImpl implements UserCustomService {
         user.setEmail(email);
         userRepository.save(user);
     }
-
+    public void updateMobileForZwfw(String idNumber,String mobile){
+        User user = userRepository.findByIdNumber(idNumber);
+        user.setMobile(mobile);
+        userRepository.save(user);
+    }
     public void updateEmailForZwfwEnterprise(String orgcode,String email){
         User user = userRepository.findByOrgCode(orgcode);
         user.setEmail(email);
+        userRepository.save(user);
+    }
+    public void updateMobileForZwfwEnterprise(String orgcode,String mobile){
+        User user = userRepository.findByOrgCode(orgcode);
+        user.setMobile(mobile);
         userRepository.save(user);
     }
 
