@@ -122,6 +122,7 @@ public class MobileUserDetailsService implements UserDetailsService {
                 }
                 if ("0000".equals(json.get("code"))) {
                     if (null == thinUser.getMobile()){
+                        log.debug("检测到数据库中无mobile，插入mobile={}",userDTO.getMobile());
                         userCustomService.updateMobileForZwfw(userDTO.getIdNumber(),userDTO.getMobile());
                     }
 

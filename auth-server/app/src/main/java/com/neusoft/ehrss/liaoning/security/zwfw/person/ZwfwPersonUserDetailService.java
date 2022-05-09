@@ -71,6 +71,7 @@ public class ZwfwPersonUserDetailService implements UserDetailsService {
 				userCustomService.updateEmailForZwfw(idNumber,uuid);
 			}
 			if (null == thinUser.getMobile()){
+				log.debug("检测到数据库中无mobile，插入mobile={}",mobile);
 				userCustomService.updateMobileForZwfw(idNumber,mobile);
 			}
 			if (!thinUser.isActivated()) {

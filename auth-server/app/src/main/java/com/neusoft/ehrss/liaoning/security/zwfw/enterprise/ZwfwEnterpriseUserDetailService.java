@@ -85,7 +85,8 @@ public class ZwfwEnterpriseUserDetailService implements UserDetailsService {
         }
         //mobile 改造
         if (!user.getMobile().equals(mobile)){
-            userCustomService.updateMobileForZwfwEnterprise(idNumber,mobile);
+            log.debug("检测到数据库中无mobile，插入mobile={}",mobile);
+            userCustomService.updateMobileForZwfwEnterprise(orgCode,mobile);
         }
 
         User userinfo = userRepository.findByOrgCode(orgCode);
